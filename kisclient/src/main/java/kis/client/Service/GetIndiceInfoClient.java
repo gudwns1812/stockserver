@@ -28,7 +28,7 @@ public class GetIndiceInfoClient {
     private final KisTokenProperties kisTokenProperties;
     private final RestTemplate restTemplate;
 
-    public KisApiResponseDto<KisIndiceInfoDto,List<KisIndicePriceDto>> getIndiceInfo(String market, String startDate, String endDate) {
+    public IndicesResponseDto getIndiceInfo(String market, String startDate, String endDate) {
         String marketCode;
 
         if (market.equals("KOSPI")) {
@@ -71,7 +71,7 @@ public class GetIndiceInfoClient {
                     output1.getPrev_rate(),
                     output2
             );
-            return response.getBody();
+            return indicesResponseDto;
         } catch (HttpServerErrorException e) {
             log.error(e.getMessage(),e);
             return null;

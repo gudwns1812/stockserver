@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
@@ -68,14 +69,16 @@ public class GetPopularStockService {
             );
             
             List<KisPopularDto> popularStocks = response.getBody().getOutput();
-            
+            List<KisPopularDto> list = popularStocks.stream()
+                    .sorted(Comparator.comparing(KisPopularDto::getRank))
+                    .limit(6).toList();
             // 각 인기 종목에 대해 DB의 Stock 엔티티에서 이미지 정보를 가져와 설정
-            popularStocks.forEach(stock -> {
+            list.forEach(stock -> {
                 stockRepository.findByStockCode(stock.getMarketCode())
                         .ifPresent(s -> stock.setStockImage(s.getStockImage()));
             });
             
-            return popularStocks;
+            return list;
         } catch (HttpServerErrorException e) {
             String body = e.getResponseBodyAsString();
             log.error("서버 에러 입니다: body: {} , e.message : {}", body, e.getMessage());

@@ -32,7 +32,7 @@ public class KisTokenManager {
         String clientId = kisTokenProperties.getClientId();
         String clientKey = "KIS_TOKEN::" + clientId;
         try {
-            String token = redisTemplate.opsForValue().get(clientId);
+            String token = redisTemplate.opsForValue().get("KIS_TOKEN::" + clientId);
             if (token != null) {
                 log.info("기존 토큰이 있습니다.");
                 return token;
