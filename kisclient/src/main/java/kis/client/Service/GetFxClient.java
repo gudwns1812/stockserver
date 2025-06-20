@@ -2,6 +2,7 @@ package kis.client.Service;
 
 import kis.client.dto.client.FxResponseDto;
 import kis.client.dto.kis.output.KisFxDto;
+import kis.client.global.error.StockNotFoundException;
 import kis.client.global.token.KisTokenManager;
 import kis.client.global.token.KisTokenProperties;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class GetFxClient  {
                 return null;
             }
         } catch (HttpServerErrorException e) {
-            throw new CustomException(StockErrorCode.KIS_NULL_CODE);
+            throw new StockNotFoundException("Fx not found.",e);
         }
     }
 }

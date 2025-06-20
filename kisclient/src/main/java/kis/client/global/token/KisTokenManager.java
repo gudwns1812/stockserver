@@ -3,19 +3,30 @@ package kis.client.global.token;
 import kis.client.global.error.TokenFetchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class KisTokenManager {
 
     private final KisTokenClient kisTokenClient;
     private final KisTokenProperties kisTokenProperties;
     private final RedisTemplate<String, String> redisTemplate;
+
+    public KisTokenManager(
+            KisTokenClient tokenClient,
+            KisTokenProperties properties,
+            @Qualifier("tokenRedisTemplate") RedisTemplate<String, String> template
+    ) {
+        kisTokenClient = tokenClient;
+        kisTokenProperties = properties;
+        redisTemplate = template;
+    }
+
 
     public String getToken() {
         String clientId = kisTokenProperties.getClientId();

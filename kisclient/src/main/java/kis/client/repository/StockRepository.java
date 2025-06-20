@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface StockRepository extends JpaRepository<Stock, Long> {
-    @Query("SELECT s FROM Stock s ORDER BY s.id DESC LIMIT 650")
-    List<Stock> findStockOrderByIdDESC(Long id);
+public interface StockRepository extends JpaRepository<Stock, Long> , StockQuerydsl {
 
     Optional<Stock> findByStockCode(String stockCode);
 }

@@ -19,7 +19,9 @@ public class StockInit {
 
     @PostConstruct
     public void init() {
-
+        List<Stock> findStocks = stockRepository.findStockOrderByIdDESC();
+        stocks.addAll(findStocks);
+        log.info("Stocks found: {}" , stocks.size());
     }
 
 }

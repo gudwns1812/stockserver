@@ -13,6 +13,9 @@ java {
 	}
 }
 
+springBoot {
+	mainClass = 'kis.kisclient.KisClientApplication'
+}
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
