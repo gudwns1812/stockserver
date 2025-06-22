@@ -19,8 +19,9 @@ public class StockQuerydslImpl implements StockQuerydsl {
     public List<Stock> findStockOrderByIdDESC(int pageIndex, int pageSize) {
         return queryFactory
                 .selectFrom(stock)
+                .offset((long) pageIndex * pageSize)
                 .orderBy(stock.id.desc())
-                .limit(650)
+                .limit(pageSize)
                 .fetch();
     }
 }

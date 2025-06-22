@@ -14,7 +14,7 @@ java {
 }
 
 springBoot {
-	mainClass = 'kis.kisclient.KisClientApplication'
+	mainClass = 'kis.client.KisClientApplication'
 }
 configurations {
 	compileOnly {

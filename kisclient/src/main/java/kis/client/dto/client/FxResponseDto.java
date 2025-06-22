@@ -1,8 +1,8 @@
 package kis.client.dto.client;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kis.client.dto.kis.KisFxPastInfoDto;
 import kis.client.dto.kis.KisFxInfoDto;
+import kis.client.dto.kis.KisFxPastInfoDto;
 import kis.client.dto.kis.output.KisFxDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;

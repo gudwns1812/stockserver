@@ -1,8 +1,8 @@
 package kis.client.dto.kis.output;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import kis.client.dto.kis.KisFxPastInfoDto;
 import kis.client.dto.kis.KisFxInfoDto;
+import kis.client.dto.kis.KisFxPastInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

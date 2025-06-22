@@ -19,7 +19,7 @@ public class StockInit {
     private final StockRepository stockRepository;
     private final List<Stock> stocks = new ArrayList<>();
     private int pageIndex;
-    private final int pageSize = 650;
+    private final int pageSize = 1250;
 
     @PostConstruct
     public void init() {
@@ -32,5 +32,7 @@ public class StockInit {
         stocks.addAll(findStocks);
         log.info("Stocks found: {}" , stocks.size());
     }
+
+
 
 }

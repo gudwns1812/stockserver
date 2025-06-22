@@ -1,7 +1,6 @@
 package kis.client.dto.redis;
 
 import kis.client.dto.kis.KisStockDto;
-import kis.client.entity.Stock;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

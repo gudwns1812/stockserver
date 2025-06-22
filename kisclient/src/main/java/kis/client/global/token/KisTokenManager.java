@@ -1,7 +1,6 @@
 package kis.client.global.token;
 
 import kis.client.global.error.TokenFetchException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;

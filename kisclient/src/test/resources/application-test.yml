@@ -1,15 +1,13 @@
 spring:
-  profiles:
-    active: ${SPRING_PROFILE}
   data:
     redis:
-      host: ${URL}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
+      host: 100.77.211.56
+      port: "6379"
+      password: "q1w2e3r4!@#"
   datasource:
-    url: jdbc:postgresql://${URL}/postgres
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://100.77.211.56/postgres
+    username: root
+    password: 1234
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -26,14 +24,14 @@ spring:
         size: 10
 
 init:
-  enabled : true
+  enabled : false
 
 
 
 kis:
-  clientId: ${KIS_CLIENT_ID}
-  appkey: ${KIS_APP_KEY}
-  appsecret: ${KIS_SECRET_KEY}
+  clientId: client-1
+  appkey: "PSIs2nJ0x9sfD8aecDXlt6shv4P9ez003oqi"
+  appsecret: "FJeXeiF2074IGYKYsFkUaxBwPjMminOhSQ089tnXPJo4jtqPvg1VKEov8tbLtVElByRoTRX83BgdcQZR7rq6IZL33EbTGRS7jk/eAGYm/rDGxPpGD+TTo7JaTrcCjIZgXZsxpOCDABecV8n5I8QP95aq/1Hhnjde1jWQQjHjWZYF3S8wfmw="
   grantType: client_credentials
   tokenUrl: https://openapi.koreainvestment.com:9443/oauth2/tokenP
 

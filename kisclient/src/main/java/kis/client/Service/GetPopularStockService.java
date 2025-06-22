@@ -23,7 +23,7 @@ import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.GET;
 
 @Component
 @RequiredArgsConstructor
