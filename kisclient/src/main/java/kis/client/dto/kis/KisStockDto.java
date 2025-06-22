@@ -30,6 +30,9 @@ public class KisStockDto {
     @JsonProperty("acml_vol")
     private String volume;
 
+    @JsonProperty("acml_tr_pbmn")
+    private String volumeValue;
+
     @JsonProperty("hts_avls")
     private String capital;
 }

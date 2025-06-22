@@ -1,10 +1,10 @@
-package kis.client.entity;
+package stock.mainserver.entity;
 
 import jakarta.persistence.*;
-import kis.client.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import stock.mainserver.global.auditing.BaseTimeEntity;
 
 @Entity
 @Getter

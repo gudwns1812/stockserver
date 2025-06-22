@@ -17,6 +17,7 @@ public class StockDto {
     private String sign;
     private String changeRate;
     private String volume;
+    private String volumeValue;
 
     public StockDto(String code, KisStockDto dto) {
         stockCode = code;
@@ -27,6 +28,7 @@ public class StockDto {
         sign = dto.getSign();
         changeRate = dto.getChangeRate();
         volume = dto.getVolume();
+        volumeValue = dto.getVolumeValue();
     }
 
 }

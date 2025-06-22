@@ -93,11 +93,11 @@ public class RefreshService {
             IndicesResponseDto kospiInfo = getIndiceInfoClient.getIndiceInfo(token,"KOSPI",
                     LocalDateTime.now().minusDays(100).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            redisTemplate.opsForValue().set("INDICE_INFO:KOSPI" , kospiInfo);
+            redisTemplate.opsForValue().set("INDICES_INFO:KOSPI" , kospiInfo);
             IndicesResponseDto kosdaqInfo = getIndiceInfoClient.getIndiceInfo(token,"KOSPI",
                     LocalDateTime.now().minusDays(100).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            redisTemplate.opsForValue().set("INDICE_INFO:KOSDAQ" , kosdaqInfo);
+            redisTemplate.opsForValue().set("INDICES_INFO:KOSDAQ" , kosdaqInfo);
             FxRefresh();
         }
 

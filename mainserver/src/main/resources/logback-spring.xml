@@ -16,9 +16,9 @@
     <springProfile name="prod">
         <property name="CLIENT_ID" value="${CLIENT_ID:client-0}" />
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>/stock-logs/${CLIENT_ID}.log</file>
+            <file>/stock-logs/main-server.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>/stock-logs/${CLIENT_ID}.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>/stock-logs/main-server.%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>0</maxHistory>
             </rollingPolicy>
             <encoder>

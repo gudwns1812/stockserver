@@ -1,4 +1,4 @@
-package kis.client.dto.kis;
+package stock.mainserver.dto.redis;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "KIS 인기 종목 가격 정보 DTO")
-public class KisPopularDto {
+public class KisPopularRedisDto {
 
     @JsonProperty("hts_kor_isnm")
     @Schema(description = "종목명", example = "삼성전자")
