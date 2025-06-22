@@ -16,7 +16,7 @@ public class StockQuerydslImpl implements StockQuerydsl {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Stock> findStockOrderByIdDESC() {
+    public List<Stock> findStockOrderByIdDESC(int pageIndex, int pageSize) {
         return queryFactory
                 .selectFrom(stock)
                 .orderBy(stock.id.desc())

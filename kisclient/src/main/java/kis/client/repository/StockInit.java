@@ -17,11 +17,18 @@ import java.util.List;
 public class StockInit {
 
     private final StockRepository stockRepository;
-    private List<Stock> stocks = new ArrayList<>();
+    private final List<Stock> stocks = new ArrayList<>();
+    private int pageIndex;
+    private final int pageSize = 650;
 
     @PostConstruct
     public void init() {
-        List<Stock> findStocks = stockRepository.findStockOrderByIdDESC();
+        String clientId = System.getenv("KIS_CLIENT_ID");
+        if (clientId != null) {
+             pageIndex = Integer.parseInt(clientId.split("-")[1]);
+        }
+        log.info("클라이언트 아이디 : {} 클라이언트 번호 : {}" , clientId , pageIndex);
+        List<Stock> findStocks = stockRepository.findStockOrderByIdDESC(pageIndex, pageSize);
         stocks.addAll(findStocks);
         log.info("Stocks found: {}" , stocks.size());
     }

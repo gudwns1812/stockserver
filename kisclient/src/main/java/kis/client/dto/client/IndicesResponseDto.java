@@ -2,7 +2,6 @@ package kis.client.dto.client;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kis.client.dto.kis.KisIndicePriceDto;
-import kis.client.dto.redis.IndicePriceDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

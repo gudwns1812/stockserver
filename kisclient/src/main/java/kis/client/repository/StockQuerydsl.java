@@ -5,5 +5,5 @@ import kis.client.entity.Stock;
 import java.util.List;
 
 public interface StockQuerydsl {
-    List<Stock> findStockOrderByIdDESC();
+    List<Stock> findStockOrderByIdDESC(int pageIndex, int pageSize);
 }

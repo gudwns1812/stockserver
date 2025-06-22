@@ -28,8 +28,7 @@ public class GetStockClient {
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
 
-    public KisStockDto getStockInfo(String stockCode) {
-        String token = kisTokenManager.getToken();
+    public KisStockDto getStockInfo(String token,String stockCode) {
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price";
 
         HttpHeaders headers = new HttpHeaders();

@@ -26,9 +26,10 @@ public class RedisToDbBatchService {
     private final StockInit stockInit;
     private final ObjectMapper objectMapper;
 
+
     @Scheduled(cron = "0 0 16 * * 1-5")
     public void RedisToDb() {
-        List<Stock> stocks = stockRepository.findStockOrderByIdDESC();
+        List<Stock> stocks = stockRepository.findStockOrderByIdDESC(stockInit.getPageIndex(),stockInit.getPageSize());
         for (Stock stock : stocks) {
             String stockCode = stock.getStockCode();
             Object object = redisTemplate.opsForValue().get("STOCK:" + stockCode);
