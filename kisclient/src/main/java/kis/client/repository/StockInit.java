@@ -19,7 +19,7 @@ public class StockInit {
     private final StockRepository stockRepository;
     private final List<Stock> stocks = new ArrayList<>();
     private int pageIndex;
-    private final int pageSize = 1250;
+    private final int pageSize = 1000;
 
     @PostConstruct
     public void init() {

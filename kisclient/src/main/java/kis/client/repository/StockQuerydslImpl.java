@@ -20,7 +20,7 @@ public class StockQuerydslImpl implements StockQuerydsl {
         return queryFactory
                 .selectFrom(stock)
                 .offset((long) pageIndex * pageSize)
-                .orderBy(stock.id.desc())
+                .orderBy(stock.id.asc())
                 .limit(pageSize)
                 .fetch();
     }

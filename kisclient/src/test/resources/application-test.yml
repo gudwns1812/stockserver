@@ -2,8 +2,8 @@ spring:
   data:
     redis:
       host: 100.77.211.56
-      port: "6379"
-      password: "q1w2e3r4!@#"
+      port: 6379
+      password: q1w2e3r4!@#
   datasource:
     url: jdbc:postgresql://100.77.211.56/postgres
     username: root
@@ -30,8 +30,8 @@ init:
 
 kis:
   clientId: client-1
-  appkey: "PSIs2nJ0x9sfD8aecDXlt6shv4P9ez003oqi"
-  appsecret: "FJeXeiF2074IGYKYsFkUaxBwPjMminOhSQ089tnXPJo4jtqPvg1VKEov8tbLtVElByRoTRX83BgdcQZR7rq6IZL33EbTGRS7jk/eAGYm/rDGxPpGD+TTo7JaTrcCjIZgXZsxpOCDABecV8n5I8QP95aq/1Hhnjde1jWQQjHjWZYF3S8wfmw="
+  appkey: PSIs2nJ0x9sfD8aecDXlt6shv4P9ez003oqi
+  appsecret: FJeXeiF2074IGYKYsFkUaxBwPjMminOhSQ089tnXPJo4jtqPvg1VKEov8tbLtVElByRoTRX83BgdcQZR7rq6IZL33EbTGRS7jk/eAGYm/rDGxPpGD+TTo7JaTrcCjIZgXZsxpOCDABecV8n5I8QP95aq/1Hhnjde1jWQQjHjWZYF3S8wfmw=
   grantType: client_credentials
   tokenUrl: https://openapi.koreainvestment.com:9443/oauth2/tokenP
 

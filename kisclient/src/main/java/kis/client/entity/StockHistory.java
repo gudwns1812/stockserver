@@ -17,7 +17,8 @@ import java.time.format.DateTimeFormatter;
 public class StockHistory extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_history_seq")
+    @SequenceGenerator(name = "stock_history_seq", sequenceName = "stock_history_seq", allocationSize = 1)
     private Long id;
 
     @Column(name = "stock_code", nullable = false)
@@ -26,7 +27,7 @@ public class StockHistory extends BaseTimeEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "data_type")
+    @Column(name = "date_type")
     private String type;
 
     @Column(name = "open_price")
