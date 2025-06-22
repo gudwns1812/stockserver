@@ -30,12 +30,11 @@ public class GetFxClient  {
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
 
-    public FxResponseDto FxInfo(String code,String symbol) {
+    public FxResponseDto FxInfo(String token ,String code,String symbol) {
 
         String startDate = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String endDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/inquire-daily-chartprice";
 
         HttpHeaders headers = new HttpHeaders();

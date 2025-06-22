@@ -30,12 +30,10 @@ import static org.springframework.http.HttpMethod.GET;
 @Slf4j
 public class GetPopularStockService {
     private final KisTokenProperties kisProperties;
-    private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
     private final StockRepository stockRepository;
 
-    public List<KisPopularDto> getPopularStock() {
-        String token = kisTokenManager.getToken();
+    public List<KisPopularDto> getPopularStock(String token) {
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/volume-rank";
 
         HttpHeaders headers = new HttpHeaders();

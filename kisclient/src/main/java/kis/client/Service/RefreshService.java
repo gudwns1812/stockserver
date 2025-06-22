@@ -88,13 +88,13 @@ public class RefreshService {
 
         if (clientId.equals("client-8")) {
             log.info("마지막 클라이언트입니다. 나머지 정보 refresh");
-            List<KisPopularDto> popularStock = getPopularStockService.getPopularStock();
+            List<KisPopularDto> popularStock = getPopularStockService.getPopularStock(token);
             redisTemplate.opsForValue().set("POPULAR" , popularStock);
-            IndicesResponseDto kospiInfo = getIndiceInfoClient.getIndiceInfo("KOSPI",
+            IndicesResponseDto kospiInfo = getIndiceInfoClient.getIndiceInfo(token,"KOSPI",
                     LocalDateTime.now().minusDays(100).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             redisTemplate.opsForValue().set("INDICE_INFO:KOSPI" , kospiInfo);
-            IndicesResponseDto kosdaqInfo = getIndiceInfoClient.getIndiceInfo("KOSPI",
+            IndicesResponseDto kosdaqInfo = getIndiceInfoClient.getIndiceInfo(token,"KOSPI",
                     LocalDateTime.now().minusDays(100).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             redisTemplate.opsForValue().set("INDICE_INFO:KOSDAQ" , kosdaqInfo);
@@ -141,12 +141,13 @@ public class RefreshService {
     }
 
     public void FxRefresh() throws InterruptedException {
+        String token = kisTokenManager.getToken();
         log.info("환율 정보를 refresh 합니다.");
         List<List<String>> allFx = fxEncoder.getAllFx();
         for (List<String> fx : allFx) {
             String type = fx.get(0);
             String code = fx.get(1);
-            FxResponseDto fxResponseDto = getFxClient.FxInfo(type, code);
+            FxResponseDto fxResponseDto = getFxClient.FxInfo(token,type, code);
             redisTemplate.opsForValue().set("FX:" + code , fxResponseDto);
             Thread.sleep(20);
         }

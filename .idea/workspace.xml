@@ -4,61 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="881551c1-6727-4226-9aec-ae02bca52983" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/KisClientApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/Service/GetFxClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/Service/GetIndiceInfoClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/Service/GetPopularStockService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/Service/GetStockClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/SearchResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/StockPriceResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/client/CategoriesResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/client/CategoryPageResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/client/CategoryStockResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/client/FxResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/client/IndicesResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisFxInfoDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisFxPastInfoDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisHTS20Stock.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisIndiceInfoDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisIndicePriceDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisPeriodStockDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisPopularDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/KisStockDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/output/KisApiResponseDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/output/KisFxDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/output/KisListOutputDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/kis/output/KisOutputDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/redis/IndicePriceDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/redis/IndicesDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/redis/KisApiRequestDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/dto/redis/StockDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/entity/FxEncoder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/entity/Stock.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/auditing/BaseTimeEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/config/AppConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/config/RedisConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/error/RedisTypeException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/error/StockNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/error/TokenFetchException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/response/SuccessResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/token/KisTokenClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/token/KisTokenManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/token/KisTokenProperties.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/global/token/KisTokenResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/repository/StockInit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kis/client/repository/StockRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/kis/sseserver/SseServerApplicationTests.java" beforeDir="false" />
-    </list>
+    <list default="true" id="881551c1-6727-4226-9aec-ae02bca52983" name="변경" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,12 +32,12 @@
     &quot;assignee&quot;: &quot;gudwns1812&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/gudwns1812/sse-server.git&quot;,
-    &quot;accountId&quot;: &quot;a54de6de-fa43-4afc-a457-33de56672e3e&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/gudwns1812/stockserver.git",
+    "accountId": "a54de6de-fa43-4afc-a457-33de56672e3e"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -99,23 +45,23 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.stockserver 빌드.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.SseServerApplication.executor": "Run",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/hj.park/projects/spring/stockserver",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.stockserver 빌드.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.SseServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/hj.park/projects/spring/stockserver&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="kis.sseserver.dto" />
@@ -155,6 +101,7 @@
       <workItem from="1750401232338" duration="6422000" />
       <workItem from="1750425536220" duration="1558000" />
       <workItem from="1750436062731" duration="223000" />
+      <workItem from="1750436370354" duration="9000" />
     </task>
     <servers />
   </component>

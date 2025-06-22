@@ -24,11 +24,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class GetIndiceInfoClient {
-    private final KisTokenManager kisTokenManager;
     private final KisTokenProperties kisTokenProperties;
     private final RestTemplate restTemplate;
 
-    public IndicesResponseDto getIndiceInfo(String market, String startDate, String endDate) {
+    public IndicesResponseDto getIndiceInfo(String token, String market, String startDate, String endDate) {
         String marketCode;
 
         if (market.equals("KOSPI")) {
@@ -37,7 +36,6 @@ public class GetIndiceInfoClient {
             marketCode = "1001";
         }
         log.info("MARKETCODE: {}", marketCode);
-        String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-indexchartprice";
 
         HttpHeaders headers = new HttpHeaders();

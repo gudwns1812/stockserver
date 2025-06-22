@@ -5,6 +5,7 @@ import kis.client.Service.GetStockClient;
 import kis.client.dto.kis.KisPeriodStockDto;
 import kis.client.entity.Stock;
 import kis.client.entity.StockHistory;
+import kis.client.global.token.KisTokenManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,7 @@ public class StockHistoryInit implements CommandLineRunner {
     private final GetStockClient getStockClient;
     private final List<FailStock> failStocks = new ArrayList<>();
     private final List<FailStock> finalFailed = new ArrayList<>();
+    private final KisTokenManager kisTokenManager;
     private final StockHistoryRepository stockHistoryRepository;
     private AtomicInteger counter = new AtomicInteger(0);
 
@@ -45,6 +47,7 @@ public class StockHistoryInit implements CommandLineRunner {
             return;
         }
         List<Stock> stocks = stockInit.getStocks();
+        String token = kisTokenManager.getToken();
         LocalDate endDate = LocalDate.now();
         LocalDate limitDate = LocalDate.of(2017, 1, 1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -64,7 +67,7 @@ public class StockHistoryInit implements CommandLineRunner {
                     };
                     String strStartDate = startDate.format(formatter);
                     try {
-                        List<KisPeriodStockDto> stockDtos = getStockClient.getStockInfoByPeriod(stock.getStockCode(), type, strStartDate, endDate.format(formatter));
+                        List<KisPeriodStockDto> stockDtos = getStockClient.getStockInfoByPeriod(token,stock.getStockCode(), type, strStartDate, endDate.format(formatter));
                         if (stockDtos == null || stockDtos.isEmpty()) {
                             if (counter.incrementAndGet() % 20 == 0) {
                                 Thread.sleep(1000);
@@ -99,7 +102,7 @@ public class StockHistoryInit implements CommandLineRunner {
             String endDate1 = failStock.getEndDate();
 
             log.info("재처리 시작 → stockCode: {}, type: {}, 기간: {} ~ {}", stockCode, type, startDate1, endDate1);
-            List<KisPeriodStockDto> stockDtos = getStockClient.getStockInfoByPeriod(stockCode, type, startDate1, endDate1);
+            List<KisPeriodStockDto> stockDtos = getStockClient.getStockInfoByPeriod(token,stockCode, type, startDate1, endDate1);
             if (stockDtos == null || stockDtos.isEmpty()) {
                 log.warn("재처리도 실패 : 주식코드: {} , 타입 : {}, strStartDate : {}, endDate: {}" ,stockCode,type,startDate1,endDate1);
                 finalFailed.add(failStock);
