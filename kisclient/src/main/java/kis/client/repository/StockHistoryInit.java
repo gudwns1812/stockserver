@@ -40,7 +40,7 @@ public class StockHistoryInit implements CommandLineRunner {
     private final StockHistoryRepository stockHistoryRepository;
     private AtomicInteger counter = new AtomicInteger(0);
 
-    @Value("${init.enabled:true}") // 기본은 실행
+    @Value("${init.enabled:false}") // 기본은 실행
     private boolean enable;
 
     @Override
