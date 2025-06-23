@@ -57,3 +57,6 @@ management:
       enabled: true
     os:
       enabled: true
+data:
+  service:
+    key: 5n9IJueHw768SiRIOa9R0olMWrhJwyL7MizU9uL3DYjTmKZcW5z%2B%2F1M8mgyDI3WUcDa5kxgsSZj1tvdBjFOuRQ%3D%3D

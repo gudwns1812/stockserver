@@ -72,7 +72,7 @@ public class GetPopularStockService {
                     .limit(6).toList();
             // 각 인기 종목에 대해 DB의 Stock 엔티티에서 이미지 정보를 가져와 설정
             list.forEach(stock -> {
-                stockRepository.findByStockCode(stock.getMarketCode())
+                stockRepository.findByStockCode(stock.getStockCode())
                         .ifPresent(s -> stock.setStockImage(s.getStockImage()));
             });
             

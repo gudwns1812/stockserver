@@ -5,7 +5,6 @@ import lombok.*;
 import stock.mainserver.global.auditing.BaseTimeEntity;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter

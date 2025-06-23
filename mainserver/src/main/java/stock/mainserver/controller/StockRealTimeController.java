@@ -5,14 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import stock.mainserver.dto.redis.IndicesRedisDto;
+import stock.mainserver.dto.redis.StockDto;
 import stock.mainserver.dto.response.PopularStockResponseDto;
 import stock.mainserver.dto.response.StockPeriodResponseDto;
 import stock.mainserver.global.response.SuccessResponse;
@@ -25,7 +24,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class StockController {
+@Tag(name = "주식 서버 API")
+@RequestMapping("/api/v2/stocks")
+public class StockRealTimeController {
 
     private final IndicesService indicesService;
     private final PopularService popularService;
@@ -59,8 +60,7 @@ public class StockController {
     }
 
     @Operation(summary = "주식 기간별 과거 데이터 조회",
-            description = "특정 주식의 현재 가격 또는 기간별 가격을 조회합니다. " +
-                    "기간을 지정하지 않으면 현재 가격을 반환하며, 기간을 지정하면 해당 기간의 주식 가격을 반환합니다.",
+            description = "해당 기간의 주식 가격을 반환합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "주식 가격 조회 성공",
                             content = @Content(schema = @Schema(implementation = StockPeriodResponseDto.class)))
@@ -72,5 +72,19 @@ public class StockController {
         List<StockPeriodResponseDto> response = stockService.getStockPeriodInfo(stockCode, period);
         return ResponseEntity.ok(new SuccessResponse<>(true,"주식 기간별 과거 데이터 조회에 성공하였습니다",response));
     }
+
+    @Operation(summary = "주식 실시간 정보 조회",
+            description = "특정 주식의 현재 가격을 조회합니다. ",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "주식 가격 조회 성공",
+                            content = @Content(schema = @Schema(implementation = StockDto.class)))
+            })
+    @GetMapping("/info/{stockCode}")
+    public ResponseEntity<?> getStockPrice(@PathVariable String stockCode) {
+        StockDto stockInfo = stockService.getStockInfo(stockCode);
+        return ResponseEntity.ok(new SuccessResponse<>(true,"주식 현재 정보 조회 성공",stockInfo));
+    }
+
+
 
 }

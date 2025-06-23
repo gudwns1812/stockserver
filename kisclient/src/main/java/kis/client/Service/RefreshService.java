@@ -42,21 +42,25 @@ public class RefreshService {
     private static final String FAILED_STOCK_KEY = "FAILED:STOCKS";
     private final StockRepository stockRepository;
     private final KisTokenManager kisTokenManager;
-
+    private final HolidayService holidayService;
 
     @Value("${kis.clientId}")
     private String clientId;
 
-    @Scheduled(fixedRate = 40_000)
+//    @Scheduled(fixedRate = 40_000)
     public void Refresh() throws Exception {
-        LocalTime now = LocalTime.now();
+        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
+        LocalTime now = LocalTime.now(koreaZone);
         LocalTime startTime = LocalTime.of(8, 40);
         LocalTime endTime = LocalTime.of(16, 10);
 
-        DayOfWeek day = LocalDate.now().getDayOfWeek();
+        DayOfWeek day = LocalDate.now(koreaZone).getDayOfWeek();
         if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
             log.info("주말엔 장이 쉽니다~ 월요일에 만나요~ 오늘은 {}입니다", day);
             return; // 주말 제외
+        } else if (holidayService.isHoliday(LocalDate.now(koreaZone))) {
+            log.info("오늘은 공휴일이라 장이 쉽니다.");
+            return;
         }
         if (now.isBefore(startTime) || now.isAfter(endTime)) {
             log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
@@ -122,7 +126,7 @@ public class RefreshService {
                         log.warn("❌ [주식 정보 조회 실패] {} → 재처리 대상 등록", stockCode);
                         return;
                     }
-                    StockDto stockDto = new StockDto(stockCode, stockInfo);
+                    StockDto stockDto = new StockDto(stock.getName(),stockCode, stockInfo);
                     redisTemplate.opsForValue().set("STOCK:" + stockCode, stockDto, Duration.ofHours(8));
 
                 } catch (Exception e) {

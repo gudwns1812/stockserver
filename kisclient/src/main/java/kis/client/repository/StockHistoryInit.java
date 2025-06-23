@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class StockHistoryInit implements CommandLineRunner {
 
     private final StockInit stockInit;
-    private final List<String> types = List.of("D","W","M","Y");
+    private final List<String> types = List.of("D","W","M");
     private final GetStockClient getStockClient;
     private final List<FailStock> failStocks = new ArrayList<>();
     private final List<FailStock> finalFailed = new ArrayList<>();
@@ -64,7 +64,6 @@ public class StockHistoryInit implements CommandLineRunner {
                         case "D" -> currentEndDate.minusDays(100);
                         case "W" -> currentEndDate.minusWeeks(100);
                         case "M" -> currentEndDate.minusMonths(100);
-                        case "Y" -> currentEndDate.minusYears(100);
                         default -> throw new IllegalArgumentException("Invalid type: " + type);
                     };
                     String strStartDate = startDate.format(formatter);
@@ -84,7 +83,7 @@ public class StockHistoryInit implements CommandLineRunner {
                         failStocks.add(new FailStock(stock.getStockCode(), type, strStartDate, endDate.format(formatter)));
                     }
                     if (counter.incrementAndGet() % 20 == 0) {
-                        Thread.sleep(1000);
+                        Thread.sleep(1500);
                     }
                     currentEndDate = startDate.minusDays(1);
                     if (startDate.isBefore(limitDate)) {

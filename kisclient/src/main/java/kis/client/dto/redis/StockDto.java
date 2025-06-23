@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StockDto {
     private String stockCode;
+    private String stockName;
     private String categoryName;
     private String price;
     private String marketName;
@@ -19,8 +20,9 @@ public class StockDto {
     private String volume;
     private String volumeValue;
 
-    public StockDto(String code, KisStockDto dto) {
+    public StockDto(String name, String code, KisStockDto dto) {
         stockCode = code;
+        stockName = name;
         categoryName = dto.getCategoryName();
         price = dto.getPrice();
         marketName = dto.getMarketName();

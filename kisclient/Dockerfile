@@ -2,7 +2,7 @@
 FROM gradle:8.5-jdk17 AS builder
 WORKDIR /app
 COPY . .
-RUN gradle build -x test
+RUN gradle clean build -x test
 
 # 2단계: Runtime Stage
 FROM eclipse-temurin:17-jdk
