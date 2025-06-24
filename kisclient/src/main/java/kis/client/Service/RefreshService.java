@@ -47,7 +47,7 @@ public class RefreshService {
     @Value("${kis.clientId}")
     private String clientId;
 
-//    @Scheduled(fixedRate = 40_000)
+    @Scheduled(fixedRate = 30_000)
     public void Refresh() throws Exception {
         ZoneId koreaZone = ZoneId.of("Asia/Seoul");
         LocalTime now = LocalTime.now(koreaZone);
@@ -128,7 +128,6 @@ public class RefreshService {
                     }
                     StockDto stockDto = new StockDto(stock.getName(),stockCode, stockInfo);
                     redisTemplate.opsForValue().set("STOCK:" + stockCode, stockDto, Duration.ofHours(8));
-
                 } catch (Exception e) {
                     log.error("stockCode 처리 중 에러 발생", e);
                 } finally {

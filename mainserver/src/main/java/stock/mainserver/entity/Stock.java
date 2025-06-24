@@ -28,6 +28,15 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "stock_price")
     private String price;
 
+    @Column(name = "open_price")
+    private String openPrice;
+
+    @Column(name = "high_price")
+    private String highPrice;
+
+    @Column(name = "low_price")
+    private String lowPrice;
+
     @Column(name = "market_name")
     private String marketName;
 

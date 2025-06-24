@@ -115,7 +115,7 @@ public class StockService {
         Object object = redisTemplate.opsForValue().get(stockCode);
         if (object == null) {
             Stock stock = stockRepository.findByStockCode(stockCode).orElseThrow(() -> new StockNotFoundException("주식을 찾지 못했습니다."));
-            stockDto = new StockDto(stock.getStockCode(),stock.getName(), stock.getCategory(), stock.getPrice(), stock.getMarketName(),
+            stockDto = new StockDto(stock.getStockCode(),stock.getName(), stock.getCategory(), stock.getPrice(),stock.getOpenPrice(),stock.getHighPrice(),stock.getLowPrice(), stock.getMarketName(),
                     stock.getChangeAmount(), stock.getSign(), stock.getChangeRate(), stock.getVolume(),
                     stock.getVolumeValue(), stock.getStockImage());
         } else {

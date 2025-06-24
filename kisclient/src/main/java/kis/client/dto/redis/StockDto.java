@@ -13,6 +13,9 @@ public class StockDto {
     private String stockName;
     private String categoryName;
     private String price;
+    private String openPrice;
+    private String highPrice;
+    private String lowPrice;
     private String marketName;
     private String changeAmount;
     private String sign;
@@ -25,6 +28,9 @@ public class StockDto {
         stockName = name;
         categoryName = dto.getCategoryName();
         price = dto.getPrice();
+        openPrice = dto.getOpenPrice();
+        highPrice = dto.getHighPrice();
+        lowPrice = dto.getLowPrice();
         marketName = dto.getMarketName();
         changeAmount = dto.getChangeAmount();
         sign = dto.getSign();

@@ -28,6 +28,15 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "stock_price")
     private String price;
 
+    @Column(name = "open_price")
+    private String openPrice;
+
+    @Column(name = "high_price")
+    private String highPrice;
+
+    @Column(name = "low_price")
+    private String lowPrice;
+
     @Column(name = "market_name")
     private String marketName;
 
@@ -71,7 +80,10 @@ public class Stock extends BaseTimeEntity {
         stockSearchCount++;
     }
 
-    public void updateStockPrice(String price, String changePrice, String sign, String changeRate) {
+    public void updateStockPrice(String price, String openPrice, String highPrice, String lowPrice, String changePrice, String sign, String changeRate) {
+        this.openPrice = openPrice;
+        this.highPrice = highPrice;
+        this.lowPrice = lowPrice;
         this.price = price;
         this.changeRate = changeRate;
         this.changeAmount = changePrice;

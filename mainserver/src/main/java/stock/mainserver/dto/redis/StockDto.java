@@ -18,6 +18,12 @@ public class StockDto {
     private String categoryName;
     @Schema(description = "주식 현재가(종가)")
     private String price;
+    @Schema(description = "주식 시가")
+    private String openPrice;
+    @Schema(description = "주식 고가")
+    private String highPrice;
+    @Schema(description = "주식 최저가")
+    private String lowPrice;
     @Schema(description = "주식이 속해있는 시장")
     private String marketName;
     @Schema(description = "주식 변화값(전날 종가 대비)")

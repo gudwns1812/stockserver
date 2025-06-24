@@ -36,7 +36,7 @@ public class RedisToDbBatchService {
                 continue;
             }
             StockDto stockDto = objectMapper.convertValue(object, StockDto.class);
-            stock.updateStockPrice(stockDto.getPrice(),stockDto.getChangeAmount(),stockDto.getSign(),stockDto.getChangeRate());
+            stock.updateStockPrice(stockDto.getPrice(),stockDto.getOpenPrice(),stockDto.getHighPrice(),stockDto.getLowPrice(),stockDto.getChangeAmount(),stockDto.getSign(),stockDto.getChangeRate());
         }
     }
 
