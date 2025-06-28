@@ -3,21 +3,21 @@ spring:
     active: ${SPRING_PROFILE:dev}
   data:
     redis:
-      host: ${URL}
+      host: ${REDIS_URL}
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
   datasource:
-    url: jdbc:postgresql://${URL}/postgres
+    url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
     properties:
       format_sql: true
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.MySQLDialect
   main:
     allow-bean-definition-overriding: true
   task:
@@ -26,7 +26,7 @@ spring:
         size: 10
 
 init:
-  enabled : false
+  enabled : true
 
 
 
@@ -41,10 +41,11 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+  port: 8081
 
 management:
   server:
-    port: 9293
+    port: 9294
   endpoints:
     web:
       exposure:

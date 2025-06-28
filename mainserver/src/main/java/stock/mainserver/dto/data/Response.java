@@ -1,4 +1,4 @@
-package kis.client.dto.data;
+package stock.mainserver.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

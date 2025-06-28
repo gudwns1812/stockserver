@@ -45,7 +45,6 @@ public class GetStockClient {
                 .queryParam("FID_COND_MRKT_DIV_CODE", "J")
                 .queryParam("FID_INPUT_ISCD", stockCode);
         URI finalUri = uri.build().encode().toUri();
-
         try {
             ResponseEntity<KisOutputDto<KisStockDto>> response = restTemplate.exchange(
                     finalUri,
@@ -54,7 +53,6 @@ public class GetStockClient {
                     new ParameterizedTypeReference<>() {}
                 );
             if (response.getBody() != null) {
-                System.out.println("response = " + response);
                 return response.getBody().getOutput();
             } else {
                 log.error("KIS API 응답이 null입니다.");
@@ -71,7 +69,6 @@ public class GetStockClient {
     }
 
     public List<KisPeriodStockDto> getStockInfoByPeriod(String token, String stockCode, String period, String startDate, String endDate) {
-        System.out.println("stockCode,period, startDate,endDate = " + stockCode + period + startDate +endDate);
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
 
         HttpHeaders headers = new HttpHeaders();
@@ -100,7 +97,6 @@ public class GetStockClient {
                     entity,
                     new ParameterizedTypeReference<>() {}
             );
-            System.out.println("response.getBody() = " + response.getBody());
             return response.getBody().getOutput2();
         } catch (HttpServerErrorException e) {
             log.error(e.getMessage(),e);

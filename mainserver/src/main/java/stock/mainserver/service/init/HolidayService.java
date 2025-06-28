@@ -1,10 +1,8 @@
-package kis.client.Service;
+package stock.mainserver.service.init;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import jakarta.annotation.PostConstruct;
-import kis.client.dto.data.HolidayItem;
-import kis.client.dto.data.Response;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +10,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import stock.mainserver.dto.data.HolidayItem;
+import stock.mainserver.dto.data.Response;
+import stock.mainserver.service.redis.HolidayToRedis;
 
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,21 +28,18 @@ public class HolidayService {
 
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
+    private final HolidayToRedis publisher;
+
     @Value("${data.service.key}")
     private String key;
-    private List<LocalDate> holidays;
+    private List<LocalDate> holidays = new ArrayList<>();
 
     @PostConstruct
     public void init() {
         getHolidayListFromApi();
     }
 
-    public boolean isHoliday(LocalDate date) {
-        if (holidays.isEmpty()) return false;
-        return holidays.contains(date);
-    }
-
-    @Scheduled(cron = "0 0 0 1 * *")
+    @Scheduled(cron = "0 5 0 * * *")
     private void getHolidayListFromApi() {
         String url = "https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
         LocalDate today = LocalDate.now();
@@ -60,11 +59,21 @@ public class HolidayService {
                 return;
             }
             List<HolidayItem> item = response.getBody().getItems().getItem();
-            holidays = item.stream().map((it) -> {
-                String localdate = it.getLocdate();
-                LocalDate date = LocalDate.parse(localdate, DateTimeFormatter.ofPattern("yyyyMMdd"));
-                return date;
-            }).toList();
+            List<LocalDate> newDates = item.stream()
+                    .map(it -> LocalDate.parse(it.getLocdate(), DateTimeFormatter.ofPattern("yyyyMMdd")))
+                    .toList();
+
+            List<LocalDate> addedDates = newDates.stream()
+                    .filter(date -> !holidays.contains(date))
+                    .toList();
+
+            for (LocalDate added : addedDates) {
+                String dateStr = added.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                publisher.publish(dateStr);
+                log.info("공휴일 추가 및 publish: {}", dateStr);
+            }
+
+            holidays = newDates;
 
         } catch (Exception e) {
             throw new RuntimeException("공휴일 API 파싱 실패", e);

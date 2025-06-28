@@ -15,8 +15,7 @@ import java.time.LocalDate;
 public class StockHistory extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_history_seq")
-    @SequenceGenerator(name = "stock_history_seq", sequenceName = "stock_history_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "stock_code", nullable = false)

@@ -10,6 +10,7 @@ import java.util.List;
 
 import static stock.mainserver.entity.QStock.stock;
 
+
 @Repository
 @RequiredArgsConstructor
 public class StockSearchRepositoryImpl implements StockSearchRepository {

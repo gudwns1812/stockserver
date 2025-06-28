@@ -7,17 +7,23 @@ spring:
       port: 6379
       password: q1w2e3r4!@#
   datasource:
-    url: jdbc:postgresql://100.77.211.56/postgres
-    username: root
-    password: 1234
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      format_sql: true
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+    main:
+      jdbc-url: jdbc:postgresql://100.91.4.35:5432/postgres
+      username: root
+      password: 1234
+      driver-class-name: org.postgresql.Driver
+    mysql:
+      jdbc-url: jdbc:mysql://localhost:33061/stock-server
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+#    properties:
+#      format_sql: true
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
   main:
     allow-bean-definition-overriding: true
   task:

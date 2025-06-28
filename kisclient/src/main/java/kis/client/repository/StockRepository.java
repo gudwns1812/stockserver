@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface StockRepository extends JpaRepository<Stock, Long> , StockQuerydsl {
 
     Optional<Stock> findByStockCode(String stockCode);
-    List<Stock> findByStockCodeIn(List<String> codes);
+    boolean existsByStockCode(String stockCode);
 
 }

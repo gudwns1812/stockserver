@@ -19,6 +19,7 @@ import stock.mainserver.service.IndicesService;
 import stock.mainserver.service.PopularService;
 import stock.mainserver.service.StockService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -68,8 +69,10 @@ public class StockRealTimeController {
     @Parameter(name = "period" ,example = "D,W,M,Y")
     @GetMapping("/{stockCode}")
     public ResponseEntity<?> StockPrice(@PathVariable String stockCode,
-                                        @RequestParam String period) {
-        List<StockPeriodResponseDto> response = stockService.getStockPeriodInfo(stockCode, period);
+                                        @RequestParam String period,
+                                        @RequestParam LocalDate startDate,
+                                        @RequestParam LocalDate endDate) {
+        List<StockPeriodResponseDto> response = stockService.getStockPeriodInfo(stockCode, period, startDate, endDate);
         return ResponseEntity.ok(new SuccessResponse<>(true,"주식 기간별 과거 데이터 조회에 성공하였습니다",response));
     }
 

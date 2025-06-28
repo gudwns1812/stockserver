@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import stock.mainserver.dto.request.StockCountRequestDto;
-import stock.mainserver.dto.response.CategoriesResponseDto;
 import stock.mainserver.dto.response.CategoryPageResponseDto;
 import stock.mainserver.dto.response.SearchResponseDto;
 import stock.mainserver.global.response.SuccessResponse;
@@ -27,23 +26,16 @@ public class StockApiController {
 
     private final StockService stockService;
 
+
     @Operation(
             summary = "카테고리 조회",
-            description = "주식 카테고리를 조회합니다. 다양한 카테고리를 지원합니다.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "카테고리 조회 성공",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CategoriesResponseDto.class)
-                            )
-                    )
-            }
+            description = "주식 카테고리를 조회합니다. 다양한 카테고리를 지원합니다."
+
     )
     @GetMapping("/category")
     public ResponseEntity<?> getCategories() {
-        List<CategoriesResponseDto> dto = stockService.AllCategories();
+
+        List<String> dto = stockService.getAllCategories();
         return ResponseEntity.ok(new SuccessResponse<>(true,"모든 카테고리 조회에 성공했습니다.",dto));
     }
 
@@ -83,7 +75,6 @@ public class StockApiController {
                     )
             }
     )
-
     @GetMapping("/search")
     public ResponseEntity<?> searchStocks(@RequestParam(required = false) String keyword) {
         log.info("searchStocks called with keyword: {}", keyword);

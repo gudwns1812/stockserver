@@ -1,5 +1,6 @@
 package stock.mainserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,10 +10,7 @@ import stock.mainserver.global.auditing.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = {
-        @Index(name = "idx_stock_code" , columnList = "stock_code"),
-        @Index(name = "idx_category_stock_code", columnList = "category, stock_code")
-})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Stock extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +55,7 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "volume_value")
     private String volumeValue;
 
+    @Column(name = "stock_search_count")
     private Integer stockSearchCount;
     private String category;
 

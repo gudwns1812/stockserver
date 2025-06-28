@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 @Slf4j
@@ -40,10 +42,8 @@ public class KisTokenManager {
             log.info("새 토큰을 발급합니다.");
             KisTokenResponse response = kisTokenClient.fetchToken();
             String newToken = response.getAccess_token();
-            int expiresIn = response.getExpires_in();
-            long ttl = Math.max(expiresIn - 60, 30);
 
-            redisTemplate.opsForValue().set(clientKey, newToken, Duration.ofSeconds(ttl));
+            redisTemplate.opsForValue().set(clientKey, newToken, Duration.ofHours(8));
             return newToken;
 
         } catch (Exception e) {

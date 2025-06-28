@@ -1,5 +1,6 @@
 package kis.client.Service;
 
+import com.google.common.util.concurrent.RateLimiter;
 import kis.client.dto.client.FxResponseDto;
 import kis.client.dto.client.IndicesResponseDto;
 import kis.client.dto.kis.KisPopularDto;
@@ -7,6 +8,7 @@ import kis.client.dto.kis.KisStockDto;
 import kis.client.dto.redis.StockDto;
 import kis.client.entity.FxEncoder;
 import kis.client.entity.Stock;
+import kis.client.entity.Holiday;
 import kis.client.global.error.StockNotFoundException;
 import kis.client.global.token.KisTokenManager;
 import kis.client.repository.StockInit;
@@ -16,12 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,30 +47,32 @@ public class RefreshService {
     private static final String FAILED_STOCK_KEY = "FAILED:STOCKS";
     private final StockRepository stockRepository;
     private final KisTokenManager kisTokenManager;
-    private final HolidayService holidayService;
+    private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private final List<Long> finishTimes = new CopyOnWriteArrayList<>();
+    private final RateLimiter rateLimiter;
 
     @Value("${kis.clientId}")
     private String clientId;
 
-    @Scheduled(fixedRate = 30_000)
+//    @Scheduled(fixedRate = 30_000)
     public void Refresh() throws Exception {
-        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
-        LocalTime now = LocalTime.now(koreaZone);
-        LocalTime startTime = LocalTime.of(8, 40);
-        LocalTime endTime = LocalTime.of(16, 10);
-
-        DayOfWeek day = LocalDate.now(koreaZone).getDayOfWeek();
-        if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
-            log.info("주말엔 장이 쉽니다~ 월요일에 만나요~ 오늘은 {}입니다", day);
-            return; // 주말 제외
-        } else if (holidayService.isHoliday(LocalDate.now(koreaZone))) {
-            log.info("오늘은 공휴일이라 장이 쉽니다.");
-            return;
-        }
-        if (now.isBefore(startTime) || now.isAfter(endTime)) {
-            log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
-            return;
-        }
+//        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
+//        LocalTime now = LocalTime.now(koreaZone);
+//        LocalTime startTime = LocalTime.of(8, 40);
+//        LocalTime endTime = LocalTime.of(19, 0);
+//
+//        DayOfWeek day = LocalDate.now(koreaZone).getDayOfWeek();
+//        if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
+//            log.info("주말엔 장이 쉽니다~ 월요일에 만나요~ 오늘은 {}입니다", day);
+//            return; // 주말 제외
+//        } else if (Holiday.isContain(LocalDate.now(koreaZone))) {
+//            log.info("오늘은 공휴일이라 장이 쉽니다.");
+//            return;
+//        }
+//        if (now.isBefore(startTime) || now.isAfter(endTime)) {
+//            log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
+//            return;
+//        }
         List<Stock> stocks = stockInit.getStocks();
         int batchSize = 20;
         //토큰 한번에 한번만 발급
@@ -90,7 +97,7 @@ public class RefreshService {
             }
         }
 
-        if (clientId.equals("client-8")) {
+        if (clientId.equals("client-7")) {
             log.info("마지막 클라이언트입니다. 나머지 정보 refresh");
             List<KisPopularDto> popularStock = getPopularStockService.getPopularStock(token);
             redisTemplate.opsForValue().set("POPULAR" , popularStock);
@@ -109,16 +116,15 @@ public class RefreshService {
     }
 
     private void stockProcessing(String token, List<Stock> stocks, int i, int batchSize) throws InterruptedException {
-        long start = System.currentTimeMillis();
         List<Stock> batch = stocks.subList(i, Math.min(i + batchSize, stocks.size()));
-        ExecutorService executor = Executors.newFixedThreadPool(batchSize); // 병렬 스레드 수 조절
-        CountDownLatch latch = new CountDownLatch(batch.size());
-
+        log.info("처리중~~~");
         for (Stock stock : batch) {
 
-            executor.submit(() -> {
+            threadPoolTaskScheduler.submit(() -> {
                 try {
                     String stockCode = stock.getStockCode();
+
+                    rateLimiter.acquire();
 
                     KisStockDto stockInfo = getStockClient.getStockInfo(token,stockCode);
                     if (stockInfo == null) {
@@ -127,21 +133,15 @@ public class RefreshService {
                         return;
                     }
                     StockDto stockDto = new StockDto(stock.getName(),stockCode, stockInfo);
-                    redisTemplate.opsForValue().set("STOCK:" + stockCode, stockDto, Duration.ofHours(8));
+                    redisTemplate.opsForValue().set("STOCK:" + stockCode, stockDto, Duration.ofMinutes(30));
                 } catch (Exception e) {
                     log.error("stockCode 처리 중 에러 발생", e);
-                } finally {
-                    latch.countDown();
                 }
             });
         }
-        latch.await();
-        executor.shutdown();
 
-        long elapsed = System.currentTimeMillis() - start;
-        long sleepTime = Math.max(0, 1000 - elapsed);
-        Thread.sleep(sleepTime);
     }
+
 
     public void FxRefresh() throws InterruptedException {
         String token = kisTokenManager.getToken();
@@ -155,4 +155,5 @@ public class RefreshService {
             Thread.sleep(20);
         }
     }
+
 }

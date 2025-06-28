@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kis.client.dto.kis.KisPeriodStockDto;
 import kis.client.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,11 +15,11 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Table(name = "stock_history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class StockHistory extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_history_seq")
-    @SequenceGenerator(name = "stock_history_seq", sequenceName = "stock_history_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "stock_code", nullable = false)
@@ -80,4 +81,15 @@ public class StockHistory extends BaseTimeEntity {
         this.prevPrice = prevPrice;
     }
 
+    public void updateHigh(String highPrice) {
+        high = highPrice;
+    }
+    public void updateLow(String lowPrice) {
+        low = lowPrice;
+    }
+    public void updateClose(String closePrice, String volume, String volumeAmount) {
+        this.close = closePrice;
+        this.volume = volume;
+        this.volumeAmount = volumeAmount;
+    }
 }

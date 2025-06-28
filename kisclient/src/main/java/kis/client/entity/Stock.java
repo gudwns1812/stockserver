@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = {
-        @Index(name = "idx_stock_code" , columnList = "stock_code"),
-        @Index(name = "idx_category_stock_code", columnList = "category, stock_code")
-})
 public class Stock extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +53,9 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "volume_value")
     private String volumeValue;
 
+    @Column(name = "stock_search_count")
     private Integer stockSearchCount;
+
     private String category;
 
     //== 생성 메서드 ==//
@@ -80,13 +78,17 @@ public class Stock extends BaseTimeEntity {
         stockSearchCount++;
     }
 
-    public void updateStockPrice(String price, String openPrice, String highPrice, String lowPrice, String changePrice, String sign, String changeRate) {
+    public void updateStockPrice(String price, String openPrice, String highPrice, String lowPrice, String changePrice, String sign, String changeRate , String volume, String volumeValue) {
         this.openPrice = openPrice;
         this.highPrice = highPrice;
         this.lowPrice = lowPrice;
         this.price = price;
-        this.changeRate = changeRate;
+        this.changeRate = changeRate.contains(".")
+                ? changeRate.substring(0, Math.min(changeRate.indexOf(".") + 3, changeRate.length()))
+                : changeRate;
         this.changeAmount = changePrice;
         this.sign = sign;
+        this.volume = volume;
+        this.volumeValue = volumeValue;
     }
 }

@@ -1,5 +1,7 @@
 package stock.mainserver.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import stock.mainserver.entity.Stock;
@@ -7,7 +9,7 @@ import stock.mainserver.entity.Stock;
 import java.util.List;
 import java.util.Optional;
 
-public interface StockRepository extends JpaRepository<Stock, Long> , StockSearchRepository {
+public interface StockRepository extends JpaRepository<Stock, Long> , StockSearchRepository{
     Optional<Stock> findByStockCode(String stockCode);
 
     @Query("SELECT DISTINCT s.category FROM Stock s order by s.category")
@@ -21,6 +23,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> , StockSearc
     @Query("SELECT s FROM Stock s order by s.stockSearchCount DESC LIMIT 5")
     List<Stock> findStockByStockSearchCount();
 
+    Page<Stock> findByCategory(String category, Pageable pageable);
 //    @Query("SELECT s FROM Stock s WHERE s.category = :category")
 //    Page<Stock> findStockCodeByCategory(@Param("category") String category, Pageable pageable);
 }
