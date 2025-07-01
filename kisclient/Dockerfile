@@ -15,4 +15,4 @@ RUN mkdir -p /logs
 COPY --from=builder /app/build/libs/*.jar app.jar
 
 # 실행 시 로그를 /stock-logs/app.log에 저장
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-Xms256m", "-Xmx768m", "-Dlogging.file.name=/stock-logs/app.log", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-Xms256m", "-Xmx600m", "-Dlogging.file.name=/stock-logs/app.log", "-jar", "app.jar"]

@@ -59,6 +59,10 @@ public class HolidayService {
                 return;
             }
             List<HolidayItem> item = response.getBody().getItems().getItem();
+            if (item == null || item.isEmpty()) {
+                log.warn("공휴일 API 응답이 비어있음");
+                return; // 혹은 예외 발생
+            }
             List<LocalDate> newDates = item.stream()
                     .map(it -> LocalDate.parse(it.getLocdate(), DateTimeFormatter.ofPattern("yyyyMMdd")))
                     .toList();

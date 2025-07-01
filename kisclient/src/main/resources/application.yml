@@ -24,11 +24,20 @@ spring:
     scheduling:
       pool:
         size: 10
+  jackson:
+    time-zone: Asia/Seoul
 
 init:
   enabled : true
 
-
+logging:
+  file:
+    name: /stock-logs/app.log # 이미 Dockerfile에서 -D로 설정했으므로 여기서는 선택 사항
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB # 각 로그 파일의 최대 크기
+      max-history: 7 # 보관할 최대 파일 수
+      total-size-cap: 100MB # 모든 보관된 로그 파일의 총 크기 제한
 
 kis:
   clientId: ${KIS_CLIENT_ID}

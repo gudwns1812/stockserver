@@ -85,13 +85,14 @@ public class StockService {
     }
 
     public CategoryPageResponseDto CategoryStocks(String categoryName, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        Page<Stock> pageStock = stockRepository.findByCategory(categoryName, pageable);
-        List<CategoryStockResponseDto> list = pageStock.getContent().stream()
+        Pageable pageable = PageRequest.of(page-1, 10);
+        Page<Stock> pageStock = stockRepository.findByCategoryOrderByVolumeAsNumberDesc(categoryName, pageable);
+        List<CategoryStockResponseDto> list = pageStock.stream()
                 .map(s -> {
-                    StockDto stockInfo = getStockInfo(s.getStockCode());
-                    return new CategoryStockResponseDto(stockInfo);
-                }).toList();
+                            StockDto stockInfo = getStockInfo(s.getStockCode());
+                            return new CategoryStockResponseDto(stockInfo);
+                        }
+                ).toList();
 
         return new CategoryPageResponseDto(pageStock.getTotalPages(),list);
     }
@@ -101,15 +102,20 @@ public class StockService {
         return stocks.stream()
                 .map(stock -> {
                     StockDto stockInfo = getStockInfo(stock.getStockCode());
-                    if (stockInfo == null) return null;
+                    String price;
+                    if (stockInfo == null) {
+                        price = "0";
+                    } else {
+                        price = stockInfo.getPrice();
+                    }
                     return new SearchResponseDto(
-                            stockInfo.getStockName(),
-                            stockInfo.getStockCode(),
-                            stockInfo.getPrice(),
-                            stockInfo.getSign(),
-                            stockInfo.getChangeAmount(),
-                            stockInfo.getChangeRate(),
-                            stockInfo.getStockImage()
+                            stock.getName(),
+                            stock.getStockCode(),
+                            price,
+                            stock.getSign(),
+                            stock.getChangeAmount(),
+                            stock.getChangeRate(),
+                            stock.getStockImage()
                     );
                 })
                 .toList();

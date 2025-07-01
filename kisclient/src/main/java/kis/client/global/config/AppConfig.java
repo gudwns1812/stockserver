@@ -19,15 +19,14 @@ public class AppConfig {
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(4);    // 병렬 최대 수
-        executor.setMaxPoolSize(10);     // 더 이상 늘어나면 API 터짐
-        executor.setQueueCapacity(1000); // 👉 충분히 큐 확보! (500 이상)
+        executor.setMaxPoolSize(4);     // 더 이상 늘어나면 API 터짐
+        executor.setQueueCapacity(500); // 👉 충분히 큐 확보! (500 이상)
         executor.setThreadNamePrefix("stock-");
         executor.initialize();
         return executor;
     }
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
 
 //        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
 //            @Override
@@ -36,7 +35,7 @@ public class AppConfig {
 //            }
 //        });
 
-        return restTemplate;
+        return new RestTemplate();
     }
     @Bean
     public JPAQueryFactory jpaQueryFactory(EntityManager em) {

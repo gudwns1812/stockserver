@@ -19,4 +19,6 @@ public interface StockHistoryRepository extends JpaRepository<StockHistory, Long
 
     @Query("SELECT MIN(sh.date) FROM StockHistory sh WHERE sh.stockCode = :stockCode")
     Optional<LocalDate> findEarliestDateByStockCode(@Param("stockCode") String stockCode);
+
+    Optional<StockHistory> findByStockCodeAndTypeAndDateBetween(String code, String type, LocalDate start, LocalDate today);
 }

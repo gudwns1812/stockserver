@@ -5,8 +5,12 @@ import kis.client.entity.Stock;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +32,10 @@ public class StockInit {
              pageIndex = Integer.parseInt(clientId.split("-")[1]);
         }
         log.info("클라이언트 아이디 : {} 클라이언트 번호 : {}" , clientId , pageIndex);
-        List<Stock> findStocks = stockRepository.findAll();
-        stocks.addAll(findStocks);
-
+        int batchSize = 375; // 한 번에 가져올 종목 수
+        Pageable pageable = PageRequest.of(pageIndex, batchSize);
+        Page<Stock> findStocks = stockRepository.findAll(pageable);
+        stocks.addAll(findStocks.getContent());
         log.info("Stocks found: {}", stocks.size());
 
 

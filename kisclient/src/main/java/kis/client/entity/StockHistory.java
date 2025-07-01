@@ -92,4 +92,8 @@ public class StockHistory extends BaseTimeEntity {
         this.volume = volume;
         this.volumeAmount = volumeAmount;
     }
+
+    public void updateDate(LocalDate baseDate) {
+        this.date = baseDate;
+    }
 }

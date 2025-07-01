@@ -22,7 +22,7 @@ public class StockDto {
     private String changeRate;
     private String volume;
     private String volumeValue;
-
+    private String stockImage;
     public StockDto(String name, String code, KisStockDto dto) {
         stockCode = code;
         stockName = name;
