@@ -1,7 +1,5 @@
 package kis.client.Service;
 
-import com.google.common.util.concurrent.RateLimiter;
-import kis.client.Service.aws.CloudWatchMetricService;
 import kis.client.Service.redis.RedisToDbBatchService;
 import kis.client.dto.client.FxResponseDto;
 import kis.client.dto.client.IndicesResponseDto;
@@ -52,30 +50,29 @@ public class RefreshService {
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
     private final RedisToDbBatchService redisToDbBatchService;
-    private final CloudWatchMetricService cloudWatchMetricService;
 
     @Value("${kis.clientId}")
     private String clientId;
 
     @Scheduled(fixedRate = 25_000)
     public void Refresh() throws Exception {
-        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
-        LocalTime now = LocalTime.now(koreaZone);
-        LocalTime startTime = LocalTime.of(8, 50);
-        LocalTime endTime = LocalTime.of(16, 0);
-
-        DayOfWeek day = LocalDate.now(koreaZone).getDayOfWeek();
-        if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
-            log.info("주말엔 장이 쉽니다~ 월요일에 만나요~ 오늘은 {}입니다", day);
-            return; // 주말 제외
-        } else if (Holiday.isContain(LocalDate.now(koreaZone))) {
-            log.info("오늘은 공휴일이라 장이 쉽니다.");
-            return;
-        }
-        if (now.isBefore(startTime) || now.isAfter(endTime)) {
-            log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
-            return;
-        }
+//        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
+//        LocalTime now = LocalTime.now(koreaZone);
+//        LocalTime startTime = LocalTime.of(8, 50);
+//        LocalTime endTime = LocalTime.of(16, 0);
+//
+//        DayOfWeek day = LocalDate.now(koreaZone).getDayOfWeek();
+//        if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
+//            log.info("주말엔 장이 쉽니다~ 월요일에 만나요~ 오늘은 {}입니다", day);
+//            return; // 주말 제외
+//        } else if (Holiday.isContain(LocalDate.now(koreaZone))) {
+//            log.info("오늘은 공휴일이라 장이 쉽니다.");
+//            return;
+//        }
+//        if (now.isBefore(startTime) || now.isAfter(endTime)) {
+//            log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
+//            return;
+//        }
         List<Stock> stocks = stockInit.getStocks();
         int batchSize = 20;
         //토큰 한번에 한번만 발급
@@ -128,15 +125,12 @@ public class RefreshService {
             threadPoolTaskScheduler.submit(() -> {
                 try {
                     String stockCode = stock.getStockCode();
-                    long start = System.nanoTime();
                     KisStockDto stockInfo = getStockClient.getStockInfo(token,stockCode);
-                    long end = System.nanoTime();
-                    long durationMs = (end - start) / 1_000_000; // 밀리초 단위
 
                     if (stockInfo == null) {
                         redisTemplate.opsForList().rightPush(FAILED_STOCK_KEY, stockCode);
-                        cloudWatchMetricService.putLatencyMetric(stockCode, durationMs);
-                        cloudWatchMetricService.putStockInfoNullMetric(stockCode);
+//                        cloudWatchMetricService.putLatencyMetric(stockCode, durationMs);
+//                        cloudWatchMetricService.putStockInfoNullMetric(stockCode);
                         log.warn("❌ [주식 정보 조회 실패] {} → 재처리 대상 등록", stockCode);
                         return;
                     }

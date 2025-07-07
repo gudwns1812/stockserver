@@ -5,6 +5,7 @@ import kis.client.entity.Stock;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +26,10 @@ public class StockInit {
     private final List<Stock> stocks = new ArrayList<>();
     private int pageIndex;
 
+    @Value("${kis.clientId}")
+    private String clientId; // 클라이언트 아이디는 application.properties에서 설정
     @PostConstruct
     public void init() {
-        String clientId = System.getenv("KIS_CLIENT_ID");
         if (clientId != null) {
              pageIndex = Integer.parseInt(clientId.split("-")[1]);
         }

@@ -29,8 +29,7 @@ public class GetStockClient {
     private final RestTemplate restTemplate;
 
     public KisStockDto getStockInfo(String token,String stockCode) {
-        String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price";
-
+        URI uri = URI.create("https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("authorization", "Bearer " + token);
@@ -41,10 +40,14 @@ public class GetStockClient {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        UriComponentsBuilder uri = UriComponentsBuilder.fromHttpUrl(url)
+        URI finalUri = UriComponentsBuilder.fromUri(uri)
                 .queryParam("FID_COND_MRKT_DIV_CODE", "J")
-                .queryParam("FID_INPUT_ISCD", stockCode);
-        URI finalUri = uri.build().encode().toUri();
+                .queryParam("FID_INPUT_ISCD", stockCode)
+                .build()
+                .encode()
+                .toUri();
+
+
         try {
             ResponseEntity<KisOutputDto<KisStockDto>> response = restTemplate.exchange(
                     finalUri,
@@ -69,7 +72,7 @@ public class GetStockClient {
     }
 
     public List<KisPeriodStockDto> getStockInfoByPeriod(String token, String stockCode, String period, String startDate, String endDate) {
-        String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
+        URI url = URI.create("https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -81,14 +84,16 @@ public class GetStockClient {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        UriComponentsBuilder uri = UriComponentsBuilder.fromHttpUrl(url)
+        URI finalUri = UriComponentsBuilder.fromUri(url)
                 .queryParam("FID_COND_MRKT_DIV_CODE", "J")
                 .queryParam("FID_INPUT_ISCD", stockCode)
-                .queryParam("FID_INPUT_DATE_1", startDate )
+                .queryParam("FID_INPUT_DATE_1", startDate)
                 .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", period)
-                .queryParam("FID_ORG_ADJ_PRC" , "1"); // 1: 수정주가, 0: 수정주가 미적용
-        URI finalUri = uri.build().encode().toUri();
+                .queryParam("FID_ORG_ADJ_PRC", "1") // 1: 수정주가, 0: 수정주가 미적용
+                .build()
+                .encode()
+                .toUri();
 
         try {
             ResponseEntity<KisApiResponseDto<KisStockDto,List<KisPeriodStockDto>>> response = restTemplate.exchange(

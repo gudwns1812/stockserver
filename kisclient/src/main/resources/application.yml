@@ -3,13 +3,13 @@ spring:
     active: ${SPRING_PROFILE:dev}
   data:
     redis:
-      host: ${REDIS_URL}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
+      host: host.docker.internal
+      port: 6379
+      password:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://host.docker.internal:33060/stock-server?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -40,9 +40,9 @@ logging:
       total-size-cap: 100MB # 모든 보관된 로그 파일의 총 크기 제한
 
 kis:
-  clientId: ${KIS_CLIENT_ID}
-  appkey: ${KIS_APP_KEY}
-  appsecret: ${KIS_SECRET_KEY}
+  clientId: client-0
+  appkey: "PSD64gaxdXbILn8ad7LYQrKHujTVxlydAKiq"
+  appsecret: "yHvyGFQiCbdmY8CXLe62/48/pID3JKOC7/4ElbdqnARCcDbmRwzB5idQ4HOTLGTEBUQIQN8X3L8xmoxa1jXZn80GXgl9DWZVfqKhxbYYfT6Nbnhvxdc4z9YW9/x6RCMWFEvZGwrFU/zoCJjA/21S/VCgbJ/P7mRPlbIADfFZx6b6kkTNvCE="
   grantType: client_credentials
   tokenUrl: https://openapi.koreainvestment.com:9443/oauth2/tokenP
 
@@ -50,11 +50,8 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
-  port: 8081
 
 management:
-  server:
-    port: 9294
   endpoints:
     web:
       exposure:
