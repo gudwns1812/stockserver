@@ -44,11 +44,11 @@ public class HolidayService {
         String url = "https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
         LocalDate today = LocalDate.now();
 
-        String furi = String.format(
+        String stringUri = String.format(
                 "%s?serviceKey=%s&solYear=%d&solMonth=%02d",
                 url, key, today.getYear(), today.getMonthValue()
         );
-        URI uri = URI.create(furi);
+        URI uri = URI.create(stringUri);
         String xml = restTemplate.getForObject(uri, String.class);
         try {
             XmlMapper mapper = new XmlMapper();

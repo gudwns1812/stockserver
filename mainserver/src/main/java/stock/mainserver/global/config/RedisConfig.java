@@ -39,7 +39,6 @@ public class RedisConfig {
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
 
-        // 여기! deprecated된 setter 대신 생성자 사용
         Jackson2JsonRedisSerializer<Object> serializer =
                 new Jackson2JsonRedisSerializer<>(redisObjectMapper, Object.class);
 
