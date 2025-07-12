@@ -6,9 +6,8 @@ import kis.client.dto.client.IndicesResponseDto;
 import kis.client.dto.kis.KisPopularDto;
 import kis.client.dto.kis.KisStockDto;
 import kis.client.dto.redis.StockDto;
+import kis.client.dto.redis.StockInfoDto;
 import kis.client.entity.FxEncoder;
-import kis.client.entity.Stock;
-import kis.client.entity.Holiday;
 import kis.client.global.error.StockNotFoundException;
 import kis.client.global.token.KisTokenManager;
 import kis.client.repository.StockInit;
@@ -21,15 +20,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
-import java.time.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +49,7 @@ public class RefreshService {
     @Value("${kis.clientId}")
     private String clientId;
 
-    @Scheduled(fixedRate = 25_000)
+    @Scheduled(fixedRate = 30_000)
     public void Refresh() throws Exception {
 //        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
 //        LocalTime now = LocalTime.now(koreaZone);
@@ -73,7 +68,7 @@ public class RefreshService {
 //            log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
 //            return;
 //        }
-        List<Stock> stocks = stockInit.getStocks();
+        List<StockInfoDto> stocks = stockInit.getStocks();
         int batchSize = 20;
         //토큰 한번에 한번만 발급
         String token = kisTokenManager.getToken();
@@ -107,8 +102,8 @@ public class RefreshService {
         }
         //재처리가 있을떄만
         if (!failedCodes.isEmpty()) {
-            List<Stock> failedStocks = failedCodes.stream()
-                    .map(s -> stockRepository.findByStockCode(s).orElseThrow(() -> new StockNotFoundException("주식 발견 실패"))).toList();
+            List<StockInfoDto> failedStocks = failedCodes.stream()
+                    .map(s -> stockRepository.findStockInfoByStockCode(s).orElseThrow(() -> new StockNotFoundException("주식 발견 실패"))).toList();
             for (int i = 0; i < failedStocks.size(); i += batchSize) {
                 stockProcessing(token, failedStocks, i, batchSize);
             }
@@ -117,11 +112,11 @@ public class RefreshService {
         log.info("주식 정보 refresh 완료");
     }
 
-    private void stockProcessing(String token, List<Stock> stocks, int i, int batchSize) throws InterruptedException {
-        List<Stock> batch = stocks.subList(i, Math.min(i + batchSize, stocks.size()));
+    private void stockProcessing(String token, List<StockInfoDto> stocks, int i, int batchSize) throws InterruptedException {
+        List<StockInfoDto> batch = stocks.subList(i, Math.min(i + batchSize, stocks.size()));
         CountDownLatch latch = new CountDownLatch(batch.size());
         log.info("처리중~~~");
-        for (Stock stock : batch) {
+        for (StockInfoDto stock : batch) {
             threadPoolTaskScheduler.submit(() -> {
                 try {
                     String stockCode = stock.getStockCode();
@@ -134,7 +129,7 @@ public class RefreshService {
                         log.warn("❌ [주식 정보 조회 실패] {} → 재처리 대상 등록", stockCode);
                         return;
                     }
-                    StockDto stockDto = new StockDto(stock.getName(),stockCode, stockInfo);
+                    StockDto stockDto = new StockDto(stock.getStockName(),stockCode, stockInfo);
                     stockDto.setStockImage(stock.getStockImage());
                     redisTemplate.opsForValue().set("STOCK:" + stockCode, stockDto);
                 } catch (Exception e) {
@@ -149,7 +144,6 @@ public class RefreshService {
 
         latch.await(); // 실제 끝나는 지점
         Thread.sleep(900);
-
     }
 
 

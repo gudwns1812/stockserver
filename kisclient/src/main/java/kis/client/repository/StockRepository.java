@@ -22,4 +22,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> , StockQuery
     List<Stock> findByPrice(String price);
 
     LocalDate findMinDateByStockCode(String stockCode);
+
+
 }

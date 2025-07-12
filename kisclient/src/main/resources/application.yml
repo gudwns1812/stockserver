@@ -1,13 +1,13 @@
 spring:
   profiles:
-    active: ${SPRING_PROFILE:dev}
+    active: prod
   data:
     redis:
-      host: host.docker.internal
+      host: localhost
       port: 6379
       password:
   datasource:
-    url: jdbc:mysql://host.docker.internal:33060/stock-server?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:33060/stock-server?useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -64,6 +64,10 @@ management:
       enabled: true
     os:
       enabled: true
+  reactor:
+    netty:
+      metrics:
+        enabled: true
 data:
   service:
     key: 5n9IJueHw768SiRIOa9R0olMWrhJwyL7MizU9uL3DYjTmKZcW5z%2B%2F1M8mgyDI3WUcDa5kxgsSZj1tvdBjFOuRQ%3D%3D

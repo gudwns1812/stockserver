@@ -1,11 +1,14 @@
 package kis.client.Service.scheduler;
 
 import kis.client.dto.kis.KisPeriodStockDto;
+import kis.client.dto.redis.StockInfoDto;
+import kis.client.entity.Holiday;
 import kis.client.entity.Stock;
 import kis.client.entity.StockHistory;
-import kis.client.entity.Holiday;
+import kis.client.global.error.StockNotFoundException;
 import kis.client.repository.StockHistoryRepository;
 import kis.client.repository.StockInit;
+import kis.client.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,6 +28,7 @@ import java.util.Optional;
 public class StockHistoryScheduler {
 
     private final StockHistoryRepository stockHistoryRepository;
+    private final StockRepository stockRepository;
     private final StockInit stockInit;
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -44,7 +48,11 @@ public class StockHistoryScheduler {
 
         String todayStr = today.format(FORMAT);
         LocalDate yesterday = today.minusDays(1);
-        List<Stock> stocks = stockInit.getStocks();
+        List<StockInfoDto> stockInfos = stockInit.getStocks();
+        List<Stock> stocks = stockInfos.stream().map((s) -> {
+            String stockCode = s.getStockCode();
+            return stockRepository.findByStockCode(stockCode).orElseThrow(() -> new StockNotFoundException("주식 코드가 존재하지 않습니다: " + stockCode));
+        }).toList();
         for (Stock stock : stocks) {
             String code = stock.getStockCode();
 

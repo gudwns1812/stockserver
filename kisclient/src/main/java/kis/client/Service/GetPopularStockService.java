@@ -4,7 +4,6 @@ package kis.client.Service;
 import kis.client.dto.kis.KisPopularDto;
 import kis.client.dto.kis.output.KisListOutputDto;
 import kis.client.global.error.StockNotFoundException;
-import kis.client.global.token.KisTokenManager;
 import kis.client.global.token.KisTokenProperties;
 import kis.client.repository.StockRepository;
 import lombok.RequiredArgsConstructor;

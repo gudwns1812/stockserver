@@ -5,7 +5,6 @@ import kis.client.dto.client.IndicesResponseDto;
 import kis.client.dto.kis.KisIndiceInfoDto;
 import kis.client.dto.kis.KisIndicePriceDto;
 import kis.client.dto.kis.output.KisApiResponseDto;
-import kis.client.global.token.KisTokenManager;
 import kis.client.global.token.KisTokenProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

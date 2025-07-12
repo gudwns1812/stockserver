@@ -2,6 +2,7 @@ package kis.client.Service.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kis.client.dto.redis.StockDto;
+import kis.client.dto.redis.StockInfoDto;
 import kis.client.entity.Holiday;
 import kis.client.entity.Stock;
 import kis.client.repository.StockInit;
@@ -30,8 +31,8 @@ public class RedisToDbBatchService {
     @Scheduled(cron = "0 10 16 * * 1-5")
     public void RedisToDb() {
         if (Holiday.isContain(LocalDate.now())) return; // 공휴일이면 실행 안 함
-        List<Stock> stocks = stockInit.getStocks();
-        for (Stock stock : stocks) {
+        List<StockInfoDto> stocks = stockInit.getStocks();
+        for (StockInfoDto stock : stocks) {
             String stockCode = stock.getStockCode();
             Object object = redisTemplate.opsForValue().get("STOCK:" + stockCode);
             if (object == null) {

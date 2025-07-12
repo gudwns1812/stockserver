@@ -1,20 +1,19 @@
 package kis.client.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import kis.client.entity.Stock;
+import kis.client.dto.redis.StockInfoDto;
+import kis.client.global.error.StockNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -22,42 +21,28 @@ import java.util.Optional;
 @Getter
 public class StockInit {
 
-    private final StockRepository stockRepository;
-    private final List<Stock> stocks = new ArrayList<>();
-    private int pageIndex;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final List<StockInfoDto> stocks = new ArrayList<>();
+    private final ObjectMapper objectMapper;
 
     @Value("${kis.clientId}")
     private String clientId; // 클라이언트 아이디는 application.properties에서 설정
     @PostConstruct
     public void init() {
-        if (clientId != null) {
-             pageIndex = Integer.parseInt(clientId.split("-")[1]);
+        String id = clientId.split("-")[1];
+        Set<Object> objects = redisTemplate.opsForSet().members("Client_ID:" + id);
+        if (objects == null || objects.isEmpty()) {
+            throw new StockNotFoundException("Client ID not found in Redis: " + id);
         }
-        log.info("클라이언트 아이디 : {} 클라이언트 번호 : {}" , clientId , pageIndex);
-        int batchSize = 375; // 한 번에 가져올 종목 수
-        Pageable pageable = PageRequest.of(pageIndex, batchSize);
-        Page<Stock> findStocks = stockRepository.findAll(pageable);
-        stocks.addAll(findStocks.getContent());
-        log.info("Stocks found: {}", stocks.size());
-
-
-//        log.info("Stocks found: {}" , stocks.size());
-//        InputStream is = getClass().getClassLoader().getResourceAsStream("failure_codes.txt");
-//        List<String> failedCodes = new BufferedReader(new InputStreamReader(is))
-//                .lines()
-//                .flatMap(line -> Arrays.stream(line.split(","))) // 각 줄 split
-//                .map(String::trim) // 공백 제거
-//                .map(s -> s.replaceAll("'", "")) // 작은 따옴표 제거
-//                .filter(s -> !s.isEmpty())
-//                .toList();
-//        List<Stock> allFailedStocks = stockRepository.findByStockCodeIn(failedCodes);
-//        log.info("DB에서 조회된 실패 종목 수: {}", allFailedStocks.size());
-//
-//        List<Stock> assignedStocks = allFailedStocks.stream()
-//                .filter(stock -> stock.getId() % 10 == pageIndex)
-//                .toList();
-//        stocks.addAll(assignedStocks);
-
+        List<String> list = objects.stream()
+                .map(Object::toString)
+                .toList();
+        stocks.addAll(list.stream()
+                .map((s) -> {
+                    Object o = redisTemplate.opsForValue().get("STOCK_INFO:" + s);
+                    return objectMapper.convertValue(o, StockInfoDto.class);
+                }).toList());
+        log.info("Stock init: {}", stocks.size());
     }
 
 
