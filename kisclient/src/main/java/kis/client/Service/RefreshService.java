@@ -1,5 +1,6 @@
 package kis.client.Service;
 
+import com.google.common.util.concurrent.RateLimiter;
 import kis.client.Service.redis.RedisToDbBatchService;
 import kis.client.dto.client.FxResponseDto;
 import kis.client.dto.client.IndicesResponseDto;
@@ -25,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +45,7 @@ public class RefreshService {
     private final StockRepository stockRepository;
     private final KisTokenManager kisTokenManager;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
-
-    private final RedisToDbBatchService redisToDbBatchService;
+    private final RateLimiter rateLimiter =  RateLimiter.create(19.0, 1, TimeUnit.SECONDS); // 초당 10개 처리
 
     @Value("${kis.clientId}")
     private String clientId;
@@ -118,6 +119,7 @@ public class RefreshService {
         log.info("처리중~~~");
         for (StockInfoDto stock : batch) {
             threadPoolTaskScheduler.submit(() -> {
+                rateLimiter.acquire();
                 try {
                     String stockCode = stock.getStockCode();
                     KisStockDto stockInfo = getStockClient.getStockInfo(token,stockCode);
@@ -143,7 +145,7 @@ public class RefreshService {
         }
 
         latch.await(); // 실제 끝나는 지점
-        Thread.sleep(900);
+//        Thread.sleep(900);
     }
 
 
