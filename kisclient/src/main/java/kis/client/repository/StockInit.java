@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -45,7 +46,11 @@ public class StockInit {
         log.info("Stock init: {}", stocks.size());
     }
 
-
-
+    @Scheduled(cron = "0 0 9 * * *")
+    public void refreshStockInfo() {
+        stocks.clear();
+        init(); // 재초기화
+        log.info("Stock info refreshed: {}", stocks.size());
+    }
 
 }

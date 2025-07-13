@@ -73,9 +73,5 @@ public class RedisConfig {
         return container;
     }
 
-    @Bean
-    public ChannelTopic topic() {
-        return new ChannelTopic("stock-channel");
-    }
 
 }

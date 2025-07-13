@@ -49,7 +49,6 @@ public class RestConfig {
                 .build();
 
         return HttpClients.custom()
-                .setConnectionReuseStrategy((request, response, context) -> false)
                 .setConnectionManager(connectionManager)
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultHeaders(List.of(

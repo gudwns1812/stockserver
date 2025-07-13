@@ -1,7 +1,6 @@
 package kis.client.Service;
 
 import com.google.common.util.concurrent.RateLimiter;
-import kis.client.Service.redis.RedisToDbBatchService;
 import kis.client.dto.client.FxResponseDto;
 import kis.client.dto.client.IndicesResponseDto;
 import kis.client.dto.kis.KisPopularDto;
@@ -18,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,7 +43,7 @@ public class RefreshService {
     private static final String FAILED_STOCK_KEY = "FAILED:STOCKS";
     private final StockRepository stockRepository;
     private final KisTokenManager kisTokenManager;
-    private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
     private final RateLimiter rateLimiter =  RateLimiter.create(19.0, 1, TimeUnit.SECONDS); // 초당 10개 처리
 
     @Value("${kis.clientId}")
@@ -118,7 +117,7 @@ public class RefreshService {
         CountDownLatch latch = new CountDownLatch(batch.size());
         log.info("처리중~~~");
         for (StockInfoDto stock : batch) {
-            threadPoolTaskScheduler.submit(() -> {
+            threadPoolTaskExecutor.submit(() -> {
                 rateLimiter.acquire();
                 try {
                     String stockCode = stock.getStockCode();
