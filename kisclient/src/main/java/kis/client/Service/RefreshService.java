@@ -118,7 +118,7 @@ public class RefreshService {
         log.info("처리중~~~");
         for (StockInfoDto stock : batch) {
             threadPoolTaskExecutor.submit(() -> {
-                rateLimiter.acquire();
+//                rateLimiter.acquire();
                 try {
                     String stockCode = stock.getStockCode();
                     KisStockDto stockInfo = getStockClient.getStockInfo(token,stockCode);
@@ -144,7 +144,7 @@ public class RefreshService {
         }
 
         latch.await(); // 실제 끝나는 지점
-//        Thread.sleep(900);
+        Thread.sleep(900);
     }
 
 

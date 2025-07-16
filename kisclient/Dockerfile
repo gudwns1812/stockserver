@@ -21,6 +21,6 @@ ENTRYPOINT ["java", \
   "-Xms256m", \
   "-Xmx600m", \
   "-XX:+UnlockDiagnosticVMOptions", \
-  "-XX:NativeMemoryTracking=summary", \
+  "-XX:NativeMemoryTracking=detail", \
   "-Dlogging.file.name=/logs/app.log", \
   "-jar", "app.jar"]
