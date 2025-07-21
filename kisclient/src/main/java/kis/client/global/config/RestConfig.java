@@ -1,5 +1,7 @@
 package kis.client.global.config;
 
+import kis.client.global.token.KisTokenManager;
+import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -11,16 +13,28 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuil
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
+@RequiredArgsConstructor
 public class RestConfig {
+
+    @Value("${kis.appkey}")
+    private String appKey;
+
+    @Value("${kis.appsecret}")
+    private String appSecret;
+
+    private final KisTokenManager kisTokenManager;
 
     @Bean
     public PoolingHttpClientConnectionManager poolingHttpClientConnectionManager() {
@@ -57,5 +71,15 @@ public class RestConfig {
     public RestTemplate restTemplate(HttpClient httpClient) {
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
         return new RestTemplate(factory);
+    }
+
+    @Bean
+    public RestClient kisClient() {
+        return RestClient.builder()
+                .baseUrl("https://openapi.koreainvestment.com:9443")
+                .defaultHeader(HttpHeaders.ACCEPT, "application/json")
+                .defaultHeader("appkey", appKey)
+                .defaultHeader("appsecret", appSecret)
+                .build();
     }
 }
