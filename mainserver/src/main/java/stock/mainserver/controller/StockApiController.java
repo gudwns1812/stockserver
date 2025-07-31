@@ -33,7 +33,7 @@ public class StockApiController {
 
     )
     @GetMapping("/category")
-    public ResponseEntity<?> getCategories() {
+    public ResponseEntity<SuccessResponse<List<String>>> getCategories() {
 
         List<String> dto = stockService.getAllCategories();
         return ResponseEntity.ok(new SuccessResponse<>(true,"모든 카테고리 조회에 성공했습니다.",dto));
@@ -54,7 +54,7 @@ public class StockApiController {
             }
     )
     @GetMapping("/category/{categoryName}")
-    public ResponseEntity<?> getCategoryStock(@PathVariable String categoryName,
+    public ResponseEntity<SuccessResponse<CategoryPageResponseDto>> getCategoryStock(@PathVariable String categoryName,
                                               @RequestParam(defaultValue = "1") int page) {
         CategoryPageResponseDto categoryPageResponseDto = stockService.CategoryStocks(categoryName, page);
         return ResponseEntity.ok(new SuccessResponse<>(true,"카테고리 종목 조회에 성공하였습니다.", categoryPageResponseDto));
@@ -76,7 +76,7 @@ public class StockApiController {
             }
     )
     @GetMapping("/search")
-    public ResponseEntity<?> searchStocks(@RequestParam(required = false) String keyword) {
+    public ResponseEntity<SuccessResponse<List<SearchResponseDto>>> searchStocks(@RequestParam(required = false) String keyword) {
         log.info("searchStocks called with keyword: {}", keyword);
         List<SearchResponseDto> searchResponseDtos = stockService.getSearchStock(keyword);
         if (keyword == null || keyword.isEmpty()) {
@@ -101,7 +101,7 @@ public class StockApiController {
             }
     )
     @PostMapping("/search")
-    public ResponseEntity<?> StockCounter(@RequestBody StockCountRequestDto dto) {
+    public ResponseEntity<SuccessResponse<Void>> StockCounter(@RequestBody StockCountRequestDto dto) {
         stockService.stockSearchCounter(dto.getStockCode());
         return ResponseEntity.ok(new SuccessResponse<>(true, "주식 검색 Count + 1 성공", null));
     }
