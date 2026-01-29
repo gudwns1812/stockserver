@@ -7,7 +7,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface StockHistoryRepository extends JpaRepository<StockHistory, Long> {
-    List<StockHistory> findByStockCodeAndType(String stockCode, String type);
-
     List<StockHistory> findByStockCodeAndTypeAndDateBetween(String stockCode, String type, LocalDate dateAfter, LocalDate dateBefore);
 }

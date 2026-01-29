@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import stock.mainserver.dto.redis.StockDto;
 
 @Data
 @NoArgsConstructor
@@ -30,4 +31,14 @@ public class SearchResponseDto {
     private String changeRate;
 
     private String stockImage;
+
+    public SearchResponseDto(StockDto stock) {
+        stockName = stock.getStockName();
+        stockCode = stock.getStockCode();
+        currentPrice = stock.getPrice();
+        sign = stock.getSign();
+        changeAmount = stock.getChangeAmount();
+        changeRate = stock.getChangeRate();
+        stockImage = stock.getStockImage();
+    }
 }

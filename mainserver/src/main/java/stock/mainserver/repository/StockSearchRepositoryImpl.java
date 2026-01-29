@@ -1,7 +1,6 @@
 package stock.mainserver.repository;
 
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ public class StockSearchRepositoryImpl implements StockSearchRepository {
         }
 
         boolean isNumeric = query.matches("\\d+");
-        StringPath field = isNumeric ? stock.stockCode : stock.name;
+        StringPath field = isNumeric ? stock.stockCode : stock.stockName;
 
         Set<Long> seenIds = new HashSet<>();
         List<Stock> result = new ArrayList<>();

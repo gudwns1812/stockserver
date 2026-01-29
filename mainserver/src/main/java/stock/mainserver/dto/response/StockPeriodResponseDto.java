@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import stock.mainserver.entity.StockHistory;
+import stock.mainserver.global.vo.DailyPrice;
 
 import java.time.LocalDate;
 
@@ -18,33 +19,23 @@ public class StockPeriodResponseDto {
 
     private LocalDate date;
     private String type;
-    private String open;
-    private String high;
-    private String low;
-    private String close;
-    private String volume;
-    private String volumeAmount;
-    private Integer prevPrice;
+    private DailyPrice price;
+    private Long prevPrice;
 
-    private Integer openFromPrev;
-    private Integer closeFromPrev;
-    private Integer highFromPrev;
-    private Integer lowFromPrev;
+    private Long openFromPrev;
+    private Long closeFromPrev;
+    private Long highFromPrev;
+    private Long lowFromPrev;
 
     public StockPeriodResponseDto(StockHistory stockHistory) {
         stockCode = stockHistory.getStockCode();
         date = stockHistory.getDate();
-        open = stockHistory.getOpen();
-        high = stockHistory.getHigh();
-        low = stockHistory.getLow();
-        close = stockHistory.getClose();
-        volume = stockHistory.getVolume();
-        volumeAmount = stockHistory.getVolumeAmount();
-        prevPrice = Integer.parseInt(close) - stockHistory.getPrevPrice();
+        price = stockHistory.getPrice();
+        prevPrice = price.getClose() - stockHistory.getPrevPrice();
 
-        openFromPrev = Integer.parseInt(open) - prevPrice;
+        openFromPrev = price.getOpen() - prevPrice;
         closeFromPrev = stockHistory.getPrevPrice();
-        highFromPrev = Integer.parseInt(high) - prevPrice;
-        lowFromPrev = Integer.parseInt(low) - prevPrice;
+        highFromPrev = price.getHigh() - prevPrice;
+        lowFromPrev = price.getLow() - prevPrice;
     }
 }

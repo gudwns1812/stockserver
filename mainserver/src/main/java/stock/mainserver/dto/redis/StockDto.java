@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import stock.mainserver.entity.Stock;
 
 @Data
 @AllArgsConstructor
@@ -38,4 +39,20 @@ public class StockDto {
     private String volumeValue;
     @Schema(description = "주식 이미지")
     private String stockImage;
+
+    public StockDto(Stock stock) {
+        stockCode = stock.getStockCode();
+        stockName = stock.getStockName();
+        categoryName = stock.getCategory();
+        price = stock.getStockPrice().getPrice();
+        openPrice = stock.getStockPrice().getOpenPrice();
+        highPrice = stock.getStockPrice().getHighPrice();
+        lowPrice = stock.getStockPrice().getLowPrice();
+        marketName = stock.getMarketName();
+        changeAmount = stock.getStockPrice().getChangePrice();
+        sign = stock.getStockPrice().getSign();
+        changeRate = stock.getStockPrice().getChangeRate();
+        volume = stock.getVolume();
+        volumeValue = stock.getVolumeValue();
+    }
 }
