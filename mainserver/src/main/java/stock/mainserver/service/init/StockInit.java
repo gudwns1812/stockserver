@@ -24,8 +24,18 @@ public class StockInit {
     @PostConstruct
     public void init() {
         List<Stock> stocks = stockRepository.findAll();
+        int batchSize = 489;
         log.info("Stocks found: {}", stocks.size());
+//        for (int i = 0; i < 10; i++) {
+//            int start = i * batchSize;
+//            int end = (i == 9) ? stocks.size() : (i + 1) * batchSize;
+//            List<Stock> batchStocks = stocks.subList(start, end);
+//
+//            saveStockInfosToRedis(batchStocks);
+//            saveClientStockListToRedis(i, batchStocks);
+//        }
         saveStockInfosToRedis(stocks, 0);
+
     }
 
     private void saveStockInfosToRedis(List<Stock> stocks, int index) {

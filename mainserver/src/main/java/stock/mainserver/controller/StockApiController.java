@@ -30,7 +30,6 @@ public class StockApiController {
     @Operation(
             summary = "카테고리 조회",
             description = "주식 카테고리를 조회합니다. 다양한 카테고리를 지원합니다."
-
     )
     @GetMapping("/category")
     public ResponseEntity<SuccessResponse<List<String>>> getCategories() {

@@ -16,16 +16,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class PopularService {
+    private static final String POPULAR_KEY = "POPULAR";
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
     public  List<PopularStockResponseDto> getPopularTop6Stock() {
-        String popularKey = "POPULAR";
-        Object object = redisTemplate.opsForValue().get(popularKey);
+        Object object = redisTemplate.opsForValue().get(POPULAR_KEY);
         if (object == null) {
             throw new PopularNotFoundException("인기종목을 찾지 못했습니다.");
         }
+
         List<KisPopularRedisDto> list = objectMapper.convertValue(object, new TypeReference<>() {});
         return list.stream().map(PopularStockResponseDto::new).toList();
     }

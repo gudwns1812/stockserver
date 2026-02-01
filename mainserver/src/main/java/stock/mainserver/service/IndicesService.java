@@ -12,18 +12,19 @@ import stock.mainserver.global.error.IndicesNotFoundException;
 @RequiredArgsConstructor
 @Slf4j
 public class IndicesService {
+    private static final String INDICES_KEY = "INDICES_INFO:";
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
     public IndicesRedisDto getIndicesInfo(String market) {
-        String indicesKey = "INDICES_INFO:" + market;
+        String indicesKey = INDICES_KEY + market;
         Object object = redisTemplate.opsForValue().get(indicesKey);
         if (object == null) {
             throw new IndicesNotFoundException("지수 관련 정보를 찾지 못했습니다.");
         }
-        return objectMapper.convertValue(object, IndicesRedisDto.class);
 
+        return objectMapper.convertValue(object, IndicesRedisDto.class);
     }
 
 }
