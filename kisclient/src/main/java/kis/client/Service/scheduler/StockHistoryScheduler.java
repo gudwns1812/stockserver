@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -39,20 +40,23 @@ public class StockHistoryScheduler {
         LocalDate today = LocalDate.now();
         DayOfWeek day = today.getDayOfWeek();
         if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
-            log.info("주말입니다. 스케줄러 동작 안 함.");
+            log.debug("주말입니다. 스케줄러 동작 안 함.");
             return;
         } else if (Holiday.isContain(today)) {
-            log.info("공휴일입니다. 스케줄러도 쉴게요~");
+            log.debug("공휴일입니다. 스케줄러도 쉴게요~");
             return;
         }
 
         String todayStr = today.format(FORMAT);
         LocalDate yesterday = today.minusDays(1);
+
         List<StockInfoDto> stockInfos = stockInit.getStocks();
         List<Stock> stocks = stockInfos.stream().map((s) -> {
             String stockCode = s.getStockCode();
-            return stockRepository.findByStockCode(stockCode).orElseThrow(() -> new StockNotFoundException("주식 코드가 존재하지 않습니다: " + stockCode));
+            return stockRepository.findByStockCode(stockCode)
+                    .orElseThrow(() -> new StockNotFoundException("주식 코드가 존재하지 않습니다: " + stockCode));
         }).toList();
+
         for (Stock stock : stocks) {
             String code = stock.getStockCode();
 
@@ -65,41 +69,36 @@ public class StockHistoryScheduler {
 
             // 주간
             LocalDate mondayOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-            Optional<StockHistory> thisWeekData = stockHistoryRepository.findByStockCodeAndTypeAndDateBetween(code, "W", mondayOfWeek,today);
-            if (thisWeekData.isEmpty()) {
-                saveHistory(code, "W", todayStr, stock, mondayOfWeek);
-            } else {
-                updateHistoryIfExists(code, "W", stock, mondayOfWeek);
-            }
+            updateHistory(stock, code, mondayOfWeek, today, todayStr, "W");
 
             // 월간
             LocalDate firstDayOfMonth = today.with(TemporalAdjusters.firstDayOfMonth());
-            Optional<StockHistory> monthlyData = stockHistoryRepository
-                    .findByStockCodeAndTypeAndDateBetween(code, "M", firstDayOfMonth, today);
-            if (monthlyData.isEmpty()) {
-                saveHistory(code, "M", todayStr, stock, today);
-            } else {
-                updateHistoryIfExists(code, "M", stock, today);
-            }
+            updateHistory(stock, code, firstDayOfMonth, today, todayStr, "M");
 
             // 연간
             LocalDate firstDayOfYear = today.with(TemporalAdjusters.firstDayOfYear());
-            Optional<StockHistory> yearlyData = stockHistoryRepository
-                    .findByStockCodeAndTypeAndDateBetween(code, "Y", firstDayOfYear, today);
-            if (yearlyData.isEmpty()) {
-                saveHistory(code, "Y", todayStr, stock, today);
-            } else {
-                updateHistoryIfExists(code, "Y", stock, today);
-            }
-
+            updateHistory(stock,code, firstDayOfYear, today, todayStr, "Y");
         }
-
     }
-    private void updateHistoryIfExists(String code, String type, Stock stock, LocalDate baseDate) {
-        Optional<StockHistory> optional = stockHistoryRepository.findByStockCodeAndTypeAndDate(code, type, baseDate);
-        if (optional.isEmpty()) return;
 
-        StockHistory history = optional.get();
+    private void updateHistory(Stock stock, String code, LocalDate startDate, LocalDate today, String todayStr,
+                               String type) {
+        Optional<StockHistory> thisWeekData = stockHistoryRepository
+                .findByStockCodeAndTypeAndDateBetween(code, type, startDate, today);
+        if (thisWeekData.isEmpty()) {
+            saveHistory(code, type, todayStr, stock, startDate);
+        } else {
+            updateHistoryIfExists(code, type, stock, startDate);
+        }
+    }
+
+    private void updateHistoryIfExists(String code, String type, Stock stock, LocalDate baseDate) {
+        StockHistory history = stockHistoryRepository.findByStockCodeAndTypeAndDate(code, type, baseDate).
+                orElse(null);
+
+        if (history == null) {
+            return;
+        }
 
         int newHigh = parseIntSafe(stock.getHighPrice());
         int newLow = parseIntSafe(stock.getLowPrice());
@@ -112,7 +111,7 @@ public class StockHistoryScheduler {
         if (newLow < oldLow || oldLow == 0) {
             history.updateLow(stock.getLowPrice());
         }
-        // ✅ 기존 volume 누적
+
         long prevVolume = parseLongSafe(history.getVolume());
         long newVolume = parseLongSafe(stock.getVolume());
         String totalVolume = String.valueOf(prevVolume + newVolume);
@@ -121,7 +120,7 @@ public class StockHistoryScheduler {
         long newVolumeValue = parseLongSafe(stock.getVolumeValue());
         String totalVolumeValue = String.valueOf(prevVolumeValue + newVolumeValue);
         history.updateDate(baseDate);
-        // ✅ close는 그대로 덮어씀
+
         history.updateClose(stock.getPrice(), totalVolume, totalVolumeValue);
     }
 
@@ -149,7 +148,11 @@ public class StockHistoryScheduler {
         stockHistoryRepository.save(newHistory);
     }
     private int parseIntSafe(String value) {
-        return Integer.parseInt(value == null || value.isBlank() ? "0" : value);
+        if (StringUtils.hasText(value)) {
+            return Integer.parseInt(value);
+        }
+
+        return 0;
     }
     private long parseLongSafe(String s) {
         try {

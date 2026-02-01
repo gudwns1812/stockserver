@@ -5,8 +5,6 @@ import kis.client.dto.kis.KisStockDto;
 import kis.client.dto.kis.output.KisApiResponseDto;
 import kis.client.dto.kis.output.KisOutputDto;
 import kis.client.global.error.StockNotFoundException;
-import kis.client.global.token.KisTokenManager;
-import kis.client.global.token.KisTokenProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -15,10 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 import java.util.List;
 
 @Component

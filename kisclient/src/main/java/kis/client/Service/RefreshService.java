@@ -8,6 +8,7 @@ import kis.client.dto.kis.KisStockDto;
 import kis.client.dto.redis.StockDto;
 import kis.client.dto.redis.StockInfoDto;
 import kis.client.entity.FxEncoder;
+import kis.client.entity.Holiday;
 import kis.client.global.error.StockNotFoundException;
 import kis.client.global.token.KisTokenManager;
 import kis.client.repository.StockInit;
@@ -20,7 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,23 +52,23 @@ public class RefreshService {
 
     @Scheduled(fixedRate = 30_000)
     public void Refresh() throws Exception {
-//        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
-//        LocalTime now = LocalTime.now(koreaZone);
-//        LocalTime startTime = LocalTime.of(8, 50);
-//        LocalTime endTime = LocalTime.of(16, 0);
-//
-//        DayOfWeek day = LocalDate.now(koreaZone).getDayOfWeek();
-//        if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
-//            log.info("주말엔 장이 쉽니다~ 월요일에 만나요~ 오늘은 {}입니다", day);
-//            return; // 주말 제외
-//        } else if (Holiday.isContain(LocalDate.now(koreaZone))) {
-//            log.info("오늘은 공휴일이라 장이 쉽니다.");
-//            return;
-//        }
-//        if (now.isBefore(startTime) || now.isAfter(endTime)) {
-//            log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
-//            return;
-//        }
+        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
+        LocalTime now = LocalTime.now(koreaZone);
+        LocalTime startTime = LocalTime.of(8, 50);
+        LocalTime endTime = LocalTime.of(16, 0);
+
+        DayOfWeek day = LocalDate.now(koreaZone).getDayOfWeek();
+        if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
+            log.info("주말엔 장이 쉽니다~ 월요일에 만나요~ 오늘은 {}입니다", day);
+            return; // 주말 제외
+        } else if (Holiday.isContain(LocalDate.now(koreaZone))) {
+            log.info("오늘은 공휴일이라 장이 쉽니다.");
+            return;
+        }
+        if (now.isBefore(startTime) || now.isAfter(endTime)) {
+            log.info("시장 운영 시간이 아님: 현재 시간 = {}", now);
+            return;
+        }
         List<StockInfoDto> stocks = stockInit.getStocks();
         int batchSize = 20;
         //토큰 한번에 한번만 발급
@@ -118,7 +119,7 @@ public class RefreshService {
         log.info("처리중~~~");
         for (StockInfoDto stock : batch) {
             threadPoolTaskExecutor.submit(() -> {
-//                rateLimiter.acquire();
+                rateLimiter.acquire();
                 try {
                     String stockCode = stock.getStockCode();
                     KisStockDto stockInfo = getStockClient.getStockInfo(token,stockCode);
@@ -144,7 +145,7 @@ public class RefreshService {
         }
 
         latch.await(); // 실제 끝나는 지점
-        Thread.sleep(900);
+//        Thread.sleep(900);
     }
 
 
