@@ -35,11 +35,11 @@ public class KisTokenManager {
 
         try {
             String token = redisTemplate.opsForValue().get(cacheKey);
-            if (token == null) {
-                token = fetchAndCacheNewToken(cacheKey);
+            if (token != null) {
+                return token;
             }
 
-            return token;
+            return fetchAndCacheNewToken(cacheKey);
         } catch (Exception e) {
             log.error("KIS 토큰 관리 프로세스 중 오류 발생: {}", e.getMessage(), e);
             throw new TokenFetchException("KIS 토큰 발급 실패", e);
