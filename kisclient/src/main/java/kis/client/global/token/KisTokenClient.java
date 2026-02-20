@@ -1,41 +1,36 @@
 package kis.client.global.token;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class KisTokenClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestClient kisClient;
     private final KisTokenProperties props;
 
     public KisTokenResponse fetchToken() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        System.out.println("appkey: " + props.getAppkey());
-        System.out.println("grant_type: " + props.getGrantType());
-        System.out.println("appsecret: " + props.getAppsecret());
+        log.debug("KIS 토큰 발급 요청 중... URL: {}", props.getTokenUrl());
+
         Map<String, String> body = Map.of(
                 "grant_type", props.getGrantType(),
                 "appkey", props.getAppkey(),
                 "appsecret", props.getAppsecret()
         );
 
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
-
-        ResponseEntity<KisTokenResponse> response = restTemplate.exchange(
-                props.getTokenUrl(),
-                HttpMethod.POST,
-                entity,
-                KisTokenResponse.class
-        );
-
-        return response.getBody();
+        return kisClient.post()
+                .uri(props.getTokenUrl())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .body(KisTokenResponse.class);
     }
 
 }

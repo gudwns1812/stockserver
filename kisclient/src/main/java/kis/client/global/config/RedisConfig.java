@@ -35,11 +35,6 @@ public class RedisConfig {
         objectMapper.findAndRegisterModules();
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-//        objectMapper.activateDefaultTyping(
-//                LaissezFaireSubTypeValidator.instance,
-//                ObjectMapper.DefaultTyping.NON_FINAL,
-//                JsonTypeInfo.As.PROPERTY
-//        );
         return objectMapper;
     }
 
@@ -72,6 +67,4 @@ public class RedisConfig {
         container.addMessageListener(redisSubscriber, new ChannelTopic("stock-channel"));
         return container;
     }
-
-
 }
